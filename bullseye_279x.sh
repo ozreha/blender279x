@@ -1,0 +1,16 @@
+./build_files/build_environment/bullseye279x_install_deps.sh \
+--with-all \
+ --build-python \
+--skip-numpy \
+ --build-boost \
+ --build-ocio \
+ --build-openexr \
+ --build-oiio \
+--skip-llvm \
+--skip-osl \
+ --build-osd \
+ --build-openvdb \
+ --build-alembic \
+ --build-opencollada \
+--skip-embree \
+ --build-ffmpeg 
