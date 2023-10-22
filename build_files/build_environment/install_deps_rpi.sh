@@ -308,13 +308,13 @@ NO_BUILD=false
 NO_CONFIRM=false
 USE_CXX11=true
 
-PYTHON_VERSION="3.7.0"
+PYTHON_VERSION="3.7.13"
 PYTHON_VERSION_MIN="3.7"
 PYTHON_FORCE_BUILD=false
 PYTHON_FORCE_REBUILD=false
 PYTHON_SKIP=false
 
-NUMPY_VERSION="1.15.0"
+NUMPY_VERSION="1.17.5"
 NUMPY_VERSION_MIN="1.8"
 NUMPY_FORCE_BUILD=false
 NUMPY_FORCE_REBUILD=false
@@ -1129,7 +1129,7 @@ compile_Python() {
 
     ./configure --prefix=$_inst --libdir=$_inst/lib --enable-ipv6 \
         --enable-loadable-sqlite-extensions --with-dbmliborder=bdb \
-        --with-computed-gotos --with-pymalloc
+        --with-computed-gotos --with-pymalloc --enable-optimizations
 
     make -j$THREADS && make install
     make clean
