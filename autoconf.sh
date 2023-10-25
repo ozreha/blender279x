@@ -11,7 +11,7 @@
 --skip-osd \
 --skip-openvdb \
  --build-alembic \
- --build-opencollada \
+--skip-opencollada \
 --skip-embree \
  --build-ffmpeg \
 
