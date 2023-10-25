@@ -4563,7 +4563,7 @@ print_info() {
   END_TIME=$(date +%s)
   PRINT ""
   PRINT ""
-  echo "It took $((($END_TIME - $START_TIME) /  60)) minutes to build Blender from scratch."
+  echo "Blender 2.79x build time : $((($END_TIME - $START_TIME) /  60)) minutes."
 
 }
 
