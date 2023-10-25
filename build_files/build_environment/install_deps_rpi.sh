@@ -4585,7 +4585,7 @@ fi
 
 print_info | tee $INFO_PATH/BUILD_NOTES.txt
 PRINT ""
-PRINT "This information has been written to $INFO_PATH/BUILD_NOTES.txt"
+#PRINT "This information has been written to $INFO_PATH/BUILD_NOTES.txt"
 PRINT ""
 
 # Switch back to user language.
