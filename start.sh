@@ -1,3 +1,5 @@
+echo "hellooooo"
+exit
 chmod +x ./autoconf.sh
 chmod +x ./build_files/build_environment/install_deps_rpi.sh
 cd ..
