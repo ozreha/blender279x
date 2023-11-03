@@ -2734,7 +2734,13 @@ install_DEB() {
   PRINT "`eval _echo "$COMMON_INFO"`"
   PRINT ""
 
-  #INFO "sse2neon.h will be checked first..."
+  #################### CFLAGS & CXXFLAGS ########################
+  echo " "
+  export CFLAGS="-fPIC -O3 -march=armv8.2-a+fp+simd -mtune=cortex-a76"
+  export CXXFLAGS="-fPIC -O3 -march=armv8.2-a+fp+simd -mtune=cortex-a76"
+  echo "CFLAGS=$CFLAGS"
+  echo "CXXFLAGS=$CXXFLAGS"
+  echo " "
   
   if [ "$NO_CONFIRM" = false ]; then
     read -p "Do you want to continue (Y/n)?"
