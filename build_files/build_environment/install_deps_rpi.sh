@@ -2736,6 +2736,7 @@ install_DEB() {
 
   #################### CFLAGS & CXXFLAGS ########################
   echo " "
+  WARNING "Temporary compiler flags will be set."
   export CFLAGS="-fPIC -O3 -march=armv8.2-a+fp+simd -mtune=cortex-a76"
   export CXXFLAGS="-fPIC -O3 -march=armv8.2-a+fp+simd -mtune=cortex-a76"
   echo "CFLAGS=$CFLAGS"
@@ -4655,12 +4656,20 @@ print_info() {
   END_TIME=$(date +%s)
   PRINT ""
   PRINT ""
-  SUCCESS "Blender-2.79x built in  ${BRIGHT}${YELLOW}$((($END_TIME - $START_TIME) /  60))${NORMAL}${YELLOW} minutes. "
-  PRINT ""
-  PRINT ""
-  RUNFROM " $INFO_PATH/run_blender_279x.sh"
-  PRINT ""
-
+  
+  RUNFILE=$INFO_PATH/build_linux/bin/blender
+       
+  if [ -f "$RUNFILE" ]; then
+    echo ""
+    SUCCESS "Blender-2.79x built in  ${BRIGHT}${YELLOW}$((($END_TIME - $START_TIME) /  60))${NORMAL}${YELLOW} minutes. "
+    PRINT ""
+    PRINT ""
+    RUNFROM " $INFO_PATH/run_blender_279x.sh"
+    PRINT ""  
+  else
+    echo ""
+    ERROR "Something went wrong!" 
+  fi
 }
 
 #### "Main" ####
