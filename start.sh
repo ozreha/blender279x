@@ -18,19 +18,39 @@
 # ##### END GPL LICENSE BLOCK #####
 
 # A shell script installing/building all needed dependencies and,
-# building Blender 2.7 ("experimental nightly build from July 2019") 
+# building Blender 2.7 ("experimental nightly build from July 2019")
 # for Debian GNU/Linux 12 (bookworm) on Raspberry Pi 5
 
-########## start ############
-echo " "
-echo "This shell script will try to install/build all needed dependencies and,"
-echo "build Blender 2.7 (experimental nightly build from July 2019)" 
-echo "for Debian GNU/Linux 12 (bookworm) on Raspberry Pi 5"
-echo " "
+########## start ###########
+
+Y=$(tput setaf 3)
+B=$(tput bold)
+N=$(tput sgr0)
 
 
+clear
+echo "################### start.sh #############################"
+echo " "
+echo " "
+echo "${B}${Y}Blender${N} is a free and open source software created by ${B}${Y}Ton Roosendaal${N},"
+echo "for 3D animation, modeling, rendering, and more."
+echo "Blender is being developed by the people at ${B}${Y}Blender Institute${N},"
+echo "who are passionate about making Blender the best tool for 3D artists"
+echo "They are supported by a large and active ${B}${Y}community${N} of users and developers from all over the world."
+echo " "
+echo "I want to thank all of them for creating such an amazing software."
+echo " "
+echo " "
+echo " "
+echo "This shell script will try to build all needed dependencies and,"
+echo "build ${B}${Y}Blender 2.7 (experimental nightly build from July 2019)${N}"
+echo "which is essentially a modern Blender 2.80 at core, with hardware accelerated render engine."
+echo " "
+echo "For Debian GNU/Linux 12 (bookworm) on Raspberry Pi 5"
+echo " "
 
 while true; do
+    echo " "
     read -p "Do you wish to continue? (y/n): " yn
     case $yn in
         [Yy]* ) break;;
@@ -50,27 +70,11 @@ chmod +x ./build_files/build_environment/install_deps_rpi.sh
 cd ..
 ./blender/autoconf.sh
 
-echo "#!/usr/bin/env bash" > run_blender_279x.sh
-echo "# ##### BEGIN GPL LICENSE BLOCK #####" > run_blender_279x.sh
-echo "#" > run_blender_279x.sh
-echo "#  This program is free software; you can redistribute it and/or" > run_blender_279x.sh
-echo "#  modify it under the terms of the GNU General Public License" > run_blender_279x.sh
-echo "#  as published by the Free Software Foundation; either version 2" > run_blender_279x.sh
-echo "#  of the License, or (at your option) any later version." > run_blender_279x.sh
-echo "#" > run_blender_279x.sh
-echo "#  This program is distributed in the hope that it will be useful," > run_blender_279x.sh
-echo "#  but WITHOUT ANY WARRANTY; without even the implied warranty of" > run_blender_279x.sh
-echo "#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the" > run_blender_279x.sh
-echo "#  GNU General Public License for more details." > run_blender_279x.sh
-echo "#" > run_blender_279x.sh
-echo "#  You should have received a copy of the GNU General Public License" > run_blender_279x.sh
-echo "#  along with this program; if not, write to the Free Software Foundation," > run_blender_279x.sh
-echo "#  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA." > run_blender_279x.sh
-echo "#" > run_blender_279x.sh
-echo "# ##### END GPL LICENSE BLOCK #####" > run_blender_279x.sh
-
 echo "vblank_mode=0 \\" > run_blender_279x.sh
 echo "./build_linux/bin/blender" >> run_blender_279x.sh
 
 chmod +x ./run_blender_279x.sh
+
+echo " "
+echo "################### end of start.sh #############################"
 
