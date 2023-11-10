@@ -200,7 +200,7 @@ ARGUMENTS_INFO="\"COMMAND LINE ARGUMENTS:
           This may make things simpler and allow working around some distribution bugs, but on the other hand it will
           use much more space on your hard drive.
         * Please be careful with the Blender building options if you have both 'official' dev packages and
-          install_deps' built ones on your system, by default CMake will prefer official packages, which may lead to
+          install_deps_rpi' built ones on your system, by default CMake will prefer official packages, which may lead to
           linking issues. Please ensure your CMake configuration always uses all correct library paths.
         * If the “force-built” library is a dependency of others, it will force the build
           of those libraries as well (e.g. --build-boost also implies --build-oiio and --build-osl...).
@@ -308,7 +308,7 @@ NO_BUILD=false
 NO_CONFIRM=false
 USE_CXX11=true
 
-PYTHON_VERSION="3.7.13"
+PYTHON_VERSION="3.7.17"
 PYTHON_VERSION_MIN="3.7"
 PYTHON_FORCE_BUILD=false
 PYTHON_FORCE_REBUILD=false
@@ -391,7 +391,10 @@ OPENCOLLADA_FORCE_REBUILD=false
 OPENCOLLADA_SKIP=false
 
 
-EMBREE_VERSION="3.2.4"
+EMBREE_VERSION="3.13.5"
+EMBREE_VERSION_SHORT="3.13"
+EMBREE_VERSION_MIN="3.13"
+EMBREE_VERSION_MEX="4.0"
 EMBREE_FORCE_BUILD=false
 EMBREE_FORCE_REBUILD=false
 EMBREE_SKIP=false
@@ -768,8 +771,8 @@ fi
 
 WARNING "****WARNING****"
 PRINT "If you are experiencing issues building Blender, _*TRY A FRESH, CLEAN BUILD FIRST*_!"
-PRINT "The same goes for install_deps itself, if you encounter issues, please first erase everything in $SRC and $INST"
-PRINT "(provided obviously you did not add anything yourself in those dirs!), and run install_deps.sh again!"
+PRINT "The same goes for install_deps_rpi itself, if you encounter issues, please first erase everything in $SRC and $INST"
+PRINT "(provided obviously you did not add anything yourself in those dirs!), and run install_deps_rpi.sh again!"
 PRINT "Often, changes in the libs built by this script, or in your distro package, cannot be handled simply, so..."
 PRINT ""
 PRINT "You may also try to use the '--build-foo' options to bypass your distribution's packages"
@@ -777,7 +780,7 @@ PRINT "for some troublesome/buggy libraries..."
 PRINT ""
 PRINT ""
 PRINT "Ran with:"
-PRINT "    install_deps.sh $COMMANDLINE"
+PRINT "    install_deps_rpi.sh $COMMANDLINE"
 PRINT ""
 PRINT ""
 
@@ -878,8 +881,8 @@ Those libraries should be available as packages in all recent distributions (opt
 DEPS_SPECIFIC_INFO="\"BUILDABLE DEPENDENCIES:
 
 The following libraries will probably not all be available as packages in your distribution
-(install_deps will by default try to install packages, and fall back to building missing ones).
-You can force install_deps to build those with '--build-all' or relevant 'build-foo' options, see '--help' message.
+(install_deps_rpi will by default try to install packages, and fall back to building missing ones).
+You can force install_deps_rpi to build those with '--build-all' or relevant 'build-foo' options, see '--help' message.
 You may also want to build them yourself (optional ones are [between brackets]):
 
     * Python $PYTHON_VERSION_MIN (from $PYTHON_SOURCE).
@@ -1138,9 +1141,9 @@ compile_Python() {
 
     ./configure --prefix=$_inst --libdir=$_inst/lib --enable-ipv6 \
         --enable-loadable-sqlite-extensions --with-dbmliborder=bdb \
-        --with-computed-gotos --with-pymalloc
+        --with-computed-gotos --with-pymalloc --enable-optimizations
 
-    make -j$THREADS && make install
+    make -j3 && make install
     make clean
 
     if [ -d $_inst ]; then
@@ -1153,11 +1156,21 @@ compile_Python() {
     magic_compile_set python-$PYTHON_VERSION $py_magic
 
     cd $CWD
+
     INFO "Done compiling Python-$PYTHON_VERSION!"
   else
     INFO "Own Python-$PYTHON_VERSION is up to date, nothing to do!"
     INFO "If you want to force rebuild of this lib, use the --force-python option."
   fi
+  
+  run_ldconfig "python"
+  
+  cd $_inst/bin
+  ./pip3 install --upgrade pip
+  ./pip install requests
+  ./pip install zstandard
+  ./pip install numpy --no-binary :all:
+  cd $CWD
 }
 
 ##### Build Numpy #####
@@ -1281,7 +1294,7 @@ compile_Boost() {
     if [ ! -f $_src/b2 ]; then
       ./bootstrap.sh
     fi
-    ./b2 -j$THREADS -a $BOOST_BUILD_MODULES \
+    ./b2 -j3 -a $BOOST_BUILD_MODULES \
          --prefix=$_inst --disable-icu boost.locale.icu=off install
     ./b2 --clean
 
@@ -1359,6 +1372,8 @@ compile_OCIO() {
     fi
 
     cd $_src
+    sed -i 's/xmmintrin.h/sse2neon.h/g' ./src/core/SSE.h
+    sed -i 's/msse2/O3/g' ./CMakeLists.txt
 
     if [ "$OCIO_USE_REPO" = true ]; then
       # XXX For now, always update from latest repo...
@@ -1380,18 +1395,18 @@ compile_OCIO() {
     cmake_d="$cmake_d -D OCIO_BUILD_APPS=OFF"
     cmake_d="$cmake_d -D OCIO_BUILD_PYGLUE=OFF"
     cmake_d="$cmake_d -D STOP_ON_WARNING=OFF"
-    cmake_d="$cmake_d -D OCIO_USE_SSE=OFF"
+    #cmake_d="$cmake_d -D OCIO_USE_SSE=OFF"
 
     #if file /bin/cp | grep -q '32-bit'; then
     #  cflags="-fPIC -m32 -march=i686"
     #else
-      cflags="-fPIC"
+      cflags="-fPIC -O3 -march=armv8.2-a+fp+simd+crc -mtune=cortex-a76"
     #fi
     cflags="$cflags -Wno-error=unused-function -Wno-error=deprecated-declarations -Wno-nonnull"
 
     cmake $cmake_d -D CMAKE_CXX_FLAGS="$cflags" -D CMAKE_EXE_LINKER_FLAGS="-lgcc_s -lgcc" ..
 
-    make -j$THREADS && make install
+    make -j3 && make install
 
     # Force linking against static libs
     rm -f $_inst/lib/*.so*
@@ -1524,12 +1539,12 @@ compile_OPENEXR() {
     #if file /bin/cp | grep -q '32-bit'; then
       #cflags="-fPIC -m32 -march=i686"
     #else
-      cflags="-fPIC"
+      cflags="-fPIC -O3 -march=armv8.2-a+fp+simd+crc -mtune=cortex-a76"
     #fi
 
     cmake $cmake_d -D CMAKE_BUILD_TYPE=Release -D CMAKE_CXX_FLAGS="$cflags" -D CMAKE_EXE_LINKER_FLAGS="-lgcc_s -lgcc" $openexr_src_path
 
-    make -j$THREADS && make install
+    make -j3 && make install
 
     make clean
 
@@ -1669,12 +1684,12 @@ compile_OIIO() {
     #if file /bin/cp | grep -q '32-bit'; then
       #cflags="-fPIC -m32 -march=i686"
     #else
-      cflags="-fPIC"
+      cflags="-fPIC -O3 -march=armv8.2-a+fp+simd+crc -mtune=cortex-a76"
     #fi
 
     cmake $cmake_d -D CMAKE_CXX_FLAGS="$cflags" -D CMAKE_EXE_LINKER_FLAGS="-lgcc_s -lgcc" ..
 
-    make -j$THREADS && make install
+    make -j3 && make install
     make clean
 
     if [ -d $_inst ]; then
@@ -2282,7 +2297,7 @@ compile_ALEMBIC() {
     fi
 
     cmake $cmake_d ./
-    make -j$THREADS install
+    make -j3 install
     make clean
 
     if [ -d $_inst ]; then
@@ -2396,16 +2411,31 @@ compile_OpenCOLLADA() {
   fi
 }
 
-#### Build Embree ####
+# ----------------------------------------------------------------------------
+# Build Embree
+
 _init_embree() {
   _src=$SRC/embree-$EMBREE_VERSION
   _git=true
-  _inst=$INST/embree-$EMBREE_VERSION
+  _inst=$INST/embree-$EMBREE_VERSION_SHORT
   _inst_shortcut=$INST/embree
+}
+
+_update_deps_embree() {
+  if [ "$1" = true ]; then
+    OPENPGL_FORCE_BUILD=true
+  fi
+  if [ "$2" = true ]; then
+    OPENPGL_FORCE_REBUILD=true
+  fi
 }
 
 clean_Embree() {
   _init_embree
+  if [ -d $_inst ]; then
+    # Force rebuilding the dependencies if needed.
+    _update_deps_embree false true
+  fi
   _clean
 }
 
@@ -2416,8 +2446,11 @@ compile_Embree() {
   fi
 
   # To be changed each time we make edits that would modify the compiled results!
-  embree_magic=9
+  embree_magic=12
   _init_embree
+
+  # Force having own builds for the dependencies.
+  _update_deps_embree true false
 
   # Clean install if needed!
   magic_compile_check embree-$EMBREE_VERSION $embree_magic
@@ -2428,7 +2461,10 @@ compile_Embree() {
   if [ ! -d $_inst ]; then
     INFO "Building Embree-$EMBREE_VERSION"
 
-    prepare_opt
+    # Force rebuilding the dependencies.
+    _update_deps_embree true true
+
+    #prepare_inst
 
     if [ ! -d $_src ]; then
       mkdir -p $SRC
@@ -2442,6 +2478,14 @@ compile_Embree() {
     fi
 
     cd $_src
+    
+    sed -i '485 i ############################### ' ./CMakeLists.txt
+    sed -i '485 i SET(EMBREE_ISA_AVX2 ON)' ./CMakeLists.txt
+    sed -i '485 i SET(EMBREE_ISA_AVX ON)' ./CMakeLists.txt
+    sed -i '485 i SET(EMBREE_ISA_SSE42 ON)' ./CMakeLists.txt
+    sed -i '485 i SET(EMBREE_ISA_SSE2 ON)' ./CMakeLists.txt
+    sed -i '485 i ####### inserted by sed ####### ' ./CMakeLists.txt
+    
 
     if [ "$EMBREE_USE_REPO" = true ]; then
       git pull origin $EMBREE_REPO_BRANCH
@@ -2466,17 +2510,22 @@ compile_Embree() {
     cmake_d="$cmake_d -D EMBREE_RAY_MASK=ON"
     cmake_d="$cmake_d -D EMBREE_FILTER_FUNCTION=ON"
     cmake_d="$cmake_d -D EMBREE_BACKFACE_CULLING=OFF"
-    cmake_d="$cmake_d -D EMBREE_TASKING_SYSTEM=INTERNAL"
     cmake_d="$cmake_d -D EMBREE_MAX_ISA=AVX2"
+    cmake_d="$cmake_d -D EMBREE_ARM=ON"
+    cmake_d="$cmake_d -D EMBREE_IGNORE_CMAKE_CXX_FLAGS=OFF"
 
-    cmake $cmake_d ../
+    cmake_d="$cmake_d -D EMBREE_TASKING_SYSTEM=INTERNAL"
+    #if [ -d $INST/tbb ]; then
+      #cmake_d="$cmake_d -D EMBREE_TBB_ROOT=$INST/tbb"
+    #fi
 
-    make -j$THREADS && make install
+    cflags="-fPIC -O3 -march=armv8.2-a+fp+simd+crc -mtune=cortex-a76 -flax-vector-conversions"
+    cmake $cmake_d  -D CMAKE_CXX_FLAGS="$cflags" ../
+    
+    make -j3 && make install
     make clean
 
-    if [ -d $_inst ]; then
-      _create_inst_shortcut
-    else
+    if [ ! -d $_inst ]; then
       ERROR "Embree-$EMBREE_VERSION failed to compile, exiting"
       exit 1
     fi
@@ -2489,6 +2538,12 @@ compile_Embree() {
     INFO "Own Embree-$EMBREE_VERSION is up to date, nothing to do!"
     INFO "If you want to force rebuild of this lib, use the --force-embree option."
   fi
+
+  if [ -d $_inst ]; then
+    _create_inst_shortcut
+  fi
+  
+  run_ldconfig "embree"
 }
 
 #### Build FFMPEG ####
@@ -2581,7 +2636,7 @@ compile_FFmpeg() {
         --disable-outdev=alsa --disable-indev=sdl --disable-indev=alsa --disable-indev=jack \
         --disable-indev=lavfi $extra
 
-    make -j$THREADS && make install
+    make -j3 && make install
     make clean
 
     if [ -d $_inst ]; then
@@ -2679,10 +2734,40 @@ install_DEB() {
   PRINT "`eval _echo "$COMMON_INFO"`"
   PRINT ""
 
+  #################### CFLAGS & CXXFLAGS ########################
+  echo " "
+  WARNING "Temporary compiler flags will be set."
+  export CFLAGS="-fPIC -O3 -march=armv8.2-a+fp+simd -mtune=cortex-a76"
+  export CXXFLAGS="-fPIC -O3 -march=armv8.2-a+fp+simd -mtune=cortex-a76"
+  echo "CFLAGS=$CFLAGS"
+  echo "CXXFLAGS=$CXXFLAGS"
+  echo " "
+  
   if [ "$NO_CONFIRM" = false ]; then
     read -p "Do you want to continue (Y/n)?"
     [ "$(echo ${REPLY:=Y} | tr [:upper:] [:lower:])" != "y" ] && exit
   fi
+
+  ####### trying to get sse2neon.h from the internet ############
+  PRINT " "
+  if ! test -f /usr/include/sse2neon.h; then
+    wget https://github.com/DLTcollab/sse2neon/archive/refs/tags/v1.6.0.tar.gz
+    if test -f ./v1.6.0.tar.gz; then
+      tar -xf ./v1.6.0.tar.gz
+      sudo cp ./sse2neon-1.6.0/sse2neon.h /usr/include/
+      sudo rm ./sse2neon-1.6.0/ -rf
+      sudo rm ./v1.6.0.tar.gz
+      SUCCESS "sse2neon.h retrieved from internet and copied to /usr/include/"
+    else
+      ERROR "sse2neon.h couldn't retrieved from internet"
+      INFO "/usr/include/sse2neon.h needed to continue. Exiting ..."
+      exit 0
+    fi
+  else
+    SUCCESS "sse2neon.h found in /usr/include"
+  fi  
+  PRINT " "
+  ###############################################################
 
   if [ ! $SUDO ]; then
     WARNING "--no-sudo enabled, impossible to run apt-get update, you'll have to do it yourself..."
@@ -2997,34 +3082,33 @@ install_DEB() {
 
 
   PRINT ""
-  install_packages_DEB libosd* opensubdiv-tools
-  clean_OSD
-  #if [ "$OSD_SKIP" = true ]; then
-    #WARNING "Skipping OpenSubdiv installation, as requested..."
-  #elif [ "$OSD_FORCE_BUILD" = true ]; then
-    #INFO "Forced OpenSubdiv building, as requested..."
-    #compile_OSD
-  #else
-    ## No package currently!
-    #PRINT ""
-    #compile_OSD
-  #fi
+  if [ "$OSD_SKIP" = true ]; then
+    WARNING "Skipping OpenSubdiv installation, as requested..."
+  elif [ "$OSD_FORCE_BUILD" = true ]; then
+    INFO "Forced OpenSubdiv building, as requested..."
+    compile_OSD
+  else
+    # No package currently! yes package but no work
+    PRINT ""
+    install_packages_DEB libosd* opensubdiv-tools
+    clean_OSD
+  fi
 
   PRINT ""
-  #if [ "$OPENVDB_SKIP" = true ]; then
-    #WARNING "Skipping OpenVDB installation, as requested..."
-  #elif [ "$OPENVDB_FORCE_BUILD" = true ]; then
-    #INFO "Forced OpenVDB building, as requested..."
-    #compile_OPENVDB
-  #else
-    #check_package_version_ge_DEB libopenvdb-dev $OPENVDB_VERSION_MIN
-    #if [ $? -eq 0 ]; then
+  if [ "$OPENVDB_SKIP" = true ]; then
+    WARNING "Skipping OpenVDB installation, as requested..."
+  elif [ "$OPENVDB_FORCE_BUILD" = true ]; then
+    INFO "Forced OpenVDB building, as requested..."
+    compile_OPENVDB
+  else
+    check_package_version_ge_DEB libopenvdb-dev $OPENVDB_VERSION_MIN
+    if [ $? -eq 0 ]; then
       install_packages_DEB libopenvdb-dev libblosc-dev
       clean_OPENVDB
-    #else
-      #compile_OPENVDB
-    #fi
-  #fi
+    else
+      compile_OPENVDB
+    fi
+  fi
 
   PRINT ""
   if [ "$ALEMBIC_SKIP" = true ]; then
@@ -4362,7 +4446,7 @@ print_info() {
   PRINT ""
   PRINT ""
   PRINT "Ran with:"
-  PRINT "    install_deps.sh $COMMANDLINE"
+  PRINT "    install_deps_rpi.sh $COMMANDLINE"
   PRINT ""
   PRINT ""
   PRINT "If you're using CMake add this to your configuration flags:"
@@ -4566,18 +4650,26 @@ print_info() {
   PRINT ""  
   PRINT ""
   PRINT ""
-  PRINT "  make -j$THREADS BUILD_CMAKE_ARGS=\"$_buildargs\"" > ./blender/make_for_pi.sh
+  PRINT "  make -j3 BUILD_CMAKE_ARGS=\"$_buildargs\"" > ./blender/make_for_pi.sh
   cd ./blender
   sh ./make_for_pi.sh
   END_TIME=$(date +%s)
   PRINT ""
   PRINT ""
-  SUCCESS "Blender-2.79x built in  ${BRIGHT}${YELLOW}$((($END_TIME - $START_TIME) /  60))${NORMAL}${YELLOW} minutes. "
-  PRINT ""
-  PRINT ""
-  RUNFROM " $INFO_PATH/run_blender_279x.sh"
-  PRINT ""
-
+  
+  RUNFILE=$INFO_PATH/build_linux/bin/blender
+       
+  if [ -f "$RUNFILE" ]; then
+    echo ""
+    SUCCESS "Blender-2.79x built in  ${BRIGHT}${YELLOW}$((($END_TIME - $START_TIME) /  60))${NORMAL}${YELLOW} minutes. "
+    PRINT ""
+    PRINT ""
+    RUNFROM " $INFO_PATH/run_blender_279x.sh"
+    PRINT ""  
+  else
+    echo ""
+    ERROR "Something went wrong!" 
+  fi
 }
 
 #### "Main" ####
