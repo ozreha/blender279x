@@ -1,7 +1,7 @@
 ./blender/build_files/build_environment/install_deps_rpi.sh \
 --with-all \
  --build-python \
- --build-numpy \
+--skip-numpy \
  --build-boost \
  --build-ocio \
  --build-openexr \
@@ -12,6 +12,6 @@
 --skip-openvdb \
  --build-alembic \
 --skip-opencollada \
---skip-embree \
+ --build-embree \
  --build-ffmpeg \
 
