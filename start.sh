@@ -23,9 +23,12 @@
 
 ########## start ###########
 
-Y=$(tput setaf 3)
+
 B=$(tput bold)
+R=$(tput setaf 1)
 N=$(tput sgr0)
+Y=$(tput setaf 3)
+
 
 
 clear
@@ -34,7 +37,7 @@ echo " "
 echo " "
 echo "${B}${Y}Blender${N} is a free and open source software created by ${B}${Y}Ton Roosendaal${N},"
 echo "for 3D animation, modeling, rendering, and more."
-echo "Blender is being developed by the people at ${B}${Y}Blender Institute${N},"
+echo "Blender is being developed by the magicians at ${B}${Y}Blender Institute${N},"
 echo "who are passionate about making Blender the best tool for 3D artists"
 echo "They are supported by a large and active ${B}${Y}community${N} of users and developers from all over the world."
 echo " "
@@ -44,9 +47,11 @@ echo " "
 echo " "
 echo "This shell script will try to build all needed dependencies and,"
 echo "build ${B}${Y}Blender 2.7 (experimental nightly build from July 2019)${N}"
-echo "which is essentially a modern Blender 2.80 at core, with hardware accelerated render engine."
+echo "which is essentially a modern Blender 2.80 at core."
+echo "Blender 2.79 comes with a great 3D game engine called BGE, great for python education as well."
 echo " "
-echo "For Debian GNU/Linux 12 (bookworm) on Raspberry Pi 5"
+echo "This script is intended to build Blender 2.79x for"
+echo "Debian GNU/Linux 12 (bookworm) on ${B}${R}Raspberry Pi 4${N}"
 echo " "
 
 while true; do
@@ -61,19 +66,23 @@ done
 
 echo " "
 
-export CFLAGS="-fPIC -O3 -march=armv8.2-a+fp+simd -mtune=cortex-a76"
-export CXXFLAGS="-fPIC -O3 -march=armv8.2-a+fp+simd -mtune=cortex-a76"
-
 chmod +x ./autoconf.sh
 chmod +x ./build_files/build_environment/install_deps_rpi.sh
 
 cd ..
 ./blender/autoconf.sh
 
-echo "vblank_mode=0 \\" > run_blender_279x.sh
-echo "./build_linux/bin/blender" >> run_blender_279x.sh
+echo "MESA_GL_VERSION_OVERRIDE=3.3 \\" > hardgl_blender.sh
+echo "vblank_mode=0 \\" >> hardgl_blender.sh
+echo "./build_linux/bin/blender" >> hardgl_blender.sh
+chmod +x ./hardgl_blender.sh
 
-chmod +x ./run_blender_279x.sh
+echo "MESA_GL_VERSION_OVERRIDE=3.3 \\" > softgl_blender.sh
+echo "LIBGL_ALWAYS_SOFTWARE=true \\" >> softgl_blender.sh
+echo "vblank_mode=0 \\" >> softgl_blender.sh
+echo "./build_linux/bin/blender" >> softgl_blender.sh
+chmod +x ./softgl_blender.sh
+
 
 echo " "
 echo "################### end of start.sh #############################"
