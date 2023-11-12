@@ -122,9 +122,7 @@ NPROCS:=3
 CMAKE_CONFIG = cmake $(BUILD_CMAKE_ARGS) \
                      -H"$(BLENDER_DIR)" \
                      -B"$(BUILD_DIR)" \
-                     -DCMAKE_BUILD_TYPE_INIT:STRING=$(BUILD_TYPE) \
-		     -DCMAKE_C_FLAGS="-O3 -march=armv8.2-a+fp+simd+crc -mtune=cortex-a76" \
-		     -DCMAKE_CXX_FLAGS="-O3 -march=armv8.2-a+fp+simd+crc -mtune=cortex-a76"
+                     -DCMAKE_BUILD_TYPE_INIT:STRING=$(BUILD_TYPE)
 
 
 # -----------------------------------------------------------------------------
