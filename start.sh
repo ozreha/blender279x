@@ -23,12 +23,10 @@
 
 ########## start ###########
 
-
 B=$(tput bold)
 R=$(tput setaf 1)
 N=$(tput sgr0)
 Y=$(tput setaf 3)
-
 
 
 clear
@@ -47,11 +45,11 @@ echo " "
 echo " "
 echo "This shell script will try to build all needed dependencies and,"
 echo "build ${B}${Y}Blender 2.7 (experimental nightly build from July 2019)${N}"
-echo "which is essentially a modern Blender 2.80 at core."
+echo "which is essentially a modern Blender 2.80 at core, with hardware accelerated render support."
 echo "Blender 2.79 comes with a great 3D game engine called BGE, great for python education as well."
 echo " "
 echo "This script is intended to build Blender 2.79x for"
-echo "Debian GNU/Linux 12 (bookworm) on ${B}${R}Raspberry Pi 4${N}"
+echo "Debian GNU/Linux 12 (bookworm) on ${B}${R}Raspberry Pi 5${N}"
 echo " "
 
 while true; do
@@ -65,6 +63,9 @@ while true; do
 done
 
 echo " "
+
+export CFLAGS="-fPIC -O3 -march=armv8.2-a+fp+simd -mtune=cortex-a76"
+export CXXFLAGS="-fPIC -O3 -march=armv8.2-a+fp+simd -mtune=cortex-a76"
 
 chmod +x ./autoconf.sh
 chmod +x ./build_files/build_environment/install_deps_rpi.sh
@@ -82,7 +83,6 @@ echo "LIBGL_ALWAYS_SOFTWARE=true \\" >> softgl_blender.sh
 echo "vblank_mode=0 \\" >> softgl_blender.sh
 echo "./build_linux/bin/blender" >> softgl_blender.sh
 chmod +x ./softgl_blender.sh
-
 
 echo " "
 echo "################### end of start.sh #############################"

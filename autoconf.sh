@@ -12,6 +12,6 @@
 --skip-openvdb \
  --build-alembic \
 --skip-opencollada \
---skip-embree \
+ --build-embree \
  --build-ffmpeg \
 
