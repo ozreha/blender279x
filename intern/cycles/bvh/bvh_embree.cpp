@@ -34,8 +34,9 @@
 
 #ifdef WITH_EMBREE
 
-#include <pmmintrin.h>
-#include <xmmintrin.h>
+//#include <pmmintrin.h>
+//#include <xmmintrin.h>
+#include <sse2neon.h>
 #include <embree3/rtcore_geometry.h>
 
 #include "bvh/bvh_embree.h"
