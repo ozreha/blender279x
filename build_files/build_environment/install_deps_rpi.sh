@@ -1400,7 +1400,7 @@ compile_OCIO() {
     #if file /bin/cp | grep -q '32-bit'; then
     #  cflags="-fPIC -m32 -march=i686"
     #else
-      cflags="-fPIC -O3 -march=armv8.2-a+fp+simd+crc -mtune=cortex-a76"
+      cflags="-fPIC -O3 -march=armv8-a+fp+simd+crc -mtune=cortex-a72"
     #fi
     cflags="$cflags -Wno-error=unused-function -Wno-error=deprecated-declarations -Wno-nonnull"
 
@@ -1539,7 +1539,7 @@ compile_OPENEXR() {
     #if file /bin/cp | grep -q '32-bit'; then
       #cflags="-fPIC -m32 -march=i686"
     #else
-      cflags="-fPIC -O3 -march=armv8.2-a+fp+simd+crc -mtune=cortex-a76"
+      cflags="-fPIC -O3 -march=armv8-a+fp+simd+crc -mtune=cortex-a72"
     #fi
 
     cmake $cmake_d -D CMAKE_BUILD_TYPE=Release -D CMAKE_CXX_FLAGS="$cflags" -D CMAKE_EXE_LINKER_FLAGS="-lgcc_s -lgcc" $openexr_src_path
@@ -1684,7 +1684,7 @@ compile_OIIO() {
     #if file /bin/cp | grep -q '32-bit'; then
       #cflags="-fPIC -m32 -march=i686"
     #else
-      cflags="-fPIC -O3 -march=armv8.2-a+fp+simd+crc -mtune=cortex-a76"
+      cflags="-fPIC -O3 -march=armv8-a+fp+simd+crc -mtune=cortex-a72"
     #fi
 
     cmake $cmake_d -D CMAKE_CXX_FLAGS="$cflags" -D CMAKE_EXE_LINKER_FLAGS="-lgcc_s -lgcc" ..
@@ -2519,7 +2519,7 @@ compile_Embree() {
       #cmake_d="$cmake_d -D EMBREE_TBB_ROOT=$INST/tbb"
     #fi
 
-    cflags="-fPIC -O3 -march=armv8.2-a+fp+simd+crc -mtune=cortex-a76 -flax-vector-conversions"
+    cflags="-fPIC -O3 -march=armv8-a+fp+simd+crc -mtune=cortex-a72 -flax-vector-conversions"
     cmake $cmake_d  -D CMAKE_CXX_FLAGS="$cflags" ../
     
     make -j3 && make install
@@ -2737,8 +2737,8 @@ install_DEB() {
   #################### CFLAGS & CXXFLAGS ########################
   echo " "
   WARNING "Temporary compiler flags will be set."
-  export CFLAGS="-fPIC -O3 -march=armv8.2-a+fp+simd -mtune=cortex-a76"
-  export CXXFLAGS="-fPIC -O3 -march=armv8.2-a+fp+simd -mtune=cortex-a76"
+  export CFLAGS="-fPIC -O3 -march=armv8-a+fp+simd -mtune=cortex-a72"
+  export CXXFLAGS="-fPIC -O3 -march=armv8-a+fp+simd -mtune=cortex-a72"
   echo "CFLAGS=$CFLAGS"
   echo "CXXFLAGS=$CXXFLAGS"
   echo " "
@@ -4664,11 +4664,11 @@ print_info() {
     SUCCESS "Blender-2.79x built in  ${BRIGHT}${YELLOW}$((($END_TIME - $START_TIME) /  60))${NORMAL}${YELLOW} minutes. "
     PRINT ""
     PRINT ""
-    RUNFROM " ${NORMAL}$INFO_PATH/${BRIGHT}${YELLOW}hardgl_blender.sh${NORMAL}${YELLOW} (hardware gl for better performance)"
+    RUNFROM " ${NORMAL}$INFO_PATH/${BRIGHT}${YELLOW}blender27.sh${NORMAL}${YELLOW} (hardware gl for better performance, recommended)"
     PRINT ""  
     PRINT "or"  
     PRINT ""  
-    RUNFROM " ${NORMAL}$INFO_PATH/${BRIGHT}${YELLOW}softgl_blender.sh${NORMAL}${YELLOW} (slower, but good for proper grease pencil render)"
+    RUNFROM " ${NORMAL}$INFO_PATH/${BRIGHT}${YELLOW}software_gl_blender27.sh${NORMAL}${YELLOW} (slower, with not so important additional rendering features)"
     PRINT ""  
   else
     echo ""
