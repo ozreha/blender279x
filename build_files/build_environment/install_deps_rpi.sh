@@ -4628,11 +4628,11 @@ print_info() {
     SUCCESS "Blender-2.79x built in  ${BRIGHT}${YELLOW}$((($END_TIME - $START_TIME) /  60))${NORMAL}${YELLOW} minutes. "
     PRINT ""
     PRINT ""
-    RUNFROM " ${NORMAL}$INFO_PATH/${BRIGHT}${YELLOW}hardgl_blender.sh${NORMAL}${YELLOW} (hardware gl for better performance)"
+    RUNFROM " ${NORMAL}$INFO_PATH/${BRIGHT}${YELLOW}blender27.sh${NORMAL}${YELLOW} (hardware gl for better performance, recommended)"
     PRINT ""  
     PRINT "or"  
     PRINT ""  
-    RUNFROM " ${NORMAL}$INFO_PATH/${BRIGHT}${YELLOW}softgl_blender.sh${NORMAL}${YELLOW} (slower, but good for proper grease pencil render)"
+    RUNFROM " ${NORMAL}$INFO_PATH/${BRIGHT}${YELLOW}software_gl_blender27.sh${NORMAL}${YELLOW} (slower, with not so important additional rendering features)"
     PRINT ""  
   else
     echo ""
