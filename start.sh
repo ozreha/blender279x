@@ -72,10 +72,10 @@ chmod +x ./build_files/build_environment/install_deps_rpi.sh
 cd ..
 ./blender/autoconf.sh
 
-echo "MESA_GL_VERSION_OVERRIDE=3.3 \\" > blender27.sh
-echo "vblank_mode=0 \\" >> blender27.sh
-echo "./build_linux/bin/blender" >> blender27.sh
-chmod +x ./blender27.sh
+echo "MESA_GL_VERSION_OVERRIDE=3.3 \\" > hardware_gl_blender27.sh
+echo "vblank_mode=0 \\" >> hardware_gl_blender27.sh
+echo "./build_linux/bin/blender" >> hardware_gl_blender27.sh
+chmod +x ./hardware_gl_blender27.sh
 
 echo "MESA_GL_VERSION_OVERRIDE=3.3 \\" > software_gl_blender27.sh
 echo "LIBGL_ALWAYS_SOFTWARE=true \\" >> software_gl_blender27.sh
