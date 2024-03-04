@@ -4664,7 +4664,7 @@ print_info() {
     SUCCESS "Blender-2.79x built in  ${BRIGHT}${YELLOW}$((($END_TIME - $START_TIME) /  60))${NORMAL}${YELLOW} minutes. "
     PRINT ""
     PRINT ""
-    RUNFROM " ${NORMAL}$INFO_PATH/${BRIGHT}${YELLOW}blender27.sh${NORMAL}${YELLOW} (hardware gl for better performance, recommended)"
+    RUNFROM " ${NORMAL}$INFO_PATH/${BRIGHT}${YELLOW}hardware_gl_blender27.sh${NORMAL}${YELLOW} (hardware gl for better performance, recommended)"
     PRINT ""  
     PRINT "or"  
     PRINT ""  
