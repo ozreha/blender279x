@@ -1143,7 +1143,7 @@ compile_Python() {
         --enable-loadable-sqlite-extensions --with-dbmliborder=bdb \
         --with-computed-gotos --with-pymalloc
 
-    make -j3 && make install
+    make -j$THREADS && make install
     make clean
 
     if [ -d $_inst ]; then
@@ -1406,7 +1406,7 @@ compile_OCIO() {
 
     cmake $cmake_d -D CMAKE_CXX_FLAGS="$cflags" -D CMAKE_EXE_LINKER_FLAGS="-lgcc_s -lgcc" ..
 
-    make -j3 && make install
+    make -j$THREADS && make install
 
     # Force linking against static libs
     rm -f $_inst/lib/*.so*
@@ -1544,7 +1544,7 @@ compile_OPENEXR() {
 
     cmake $cmake_d -D CMAKE_BUILD_TYPE=Release -D CMAKE_CXX_FLAGS="$cflags" -D CMAKE_EXE_LINKER_FLAGS="-lgcc_s -lgcc" $openexr_src_path
 
-    make -j3 && make install
+    make -j$THREADS && make install
 
     make clean
 
@@ -1689,7 +1689,7 @@ compile_OIIO() {
 
     cmake $cmake_d -D CMAKE_CXX_FLAGS="$cflags" -D CMAKE_EXE_LINKER_FLAGS="-lgcc_s -lgcc" ..
 
-    make -j3 && make install
+    make -j$THREADS && make install
     make clean
 
     if [ -d $_inst ]; then
@@ -2297,7 +2297,7 @@ compile_ALEMBIC() {
     fi
 
     cmake $cmake_d ./
-    make -j3 install
+    make -j$THREADS install
     make clean
 
     if [ -d $_inst ]; then
@@ -2522,7 +2522,7 @@ compile_Embree() {
     cflags="-fPIC -O3 -march=armv8.2-a+fp+simd+crc -mtune=cortex-a76 -flax-vector-conversions"
     cmake $cmake_d  -D CMAKE_CXX_FLAGS="$cflags" ../
     
-    make -j3 && make install
+    make -j$THREADS && make install
     make clean
 
     if [ ! -d $_inst ]; then
@@ -2636,7 +2636,7 @@ compile_FFmpeg() {
         --disable-outdev=alsa --disable-indev=sdl --disable-indev=alsa --disable-indev=jack \
         --disable-indev=lavfi $extra
 
-    make -j3 && make install
+    make -j$THREADS && make install
     make clean
 
     if [ -d $_inst ]; then
@@ -4650,7 +4650,7 @@ print_info() {
   PRINT ""  
   PRINT ""
   PRINT ""
-  PRINT "  make -j3 BUILD_CMAKE_ARGS=\"$_buildargs\"" > ./blender/make_for_pi.sh
+  PRINT "  make -j$THREADS BUILD_CMAKE_ARGS=\"$_buildargs\"" > ./blender/make_for_pi.sh
   cd ./blender
   sh ./make_for_pi.sh
   END_TIME=$(date +%s)
