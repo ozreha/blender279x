@@ -66,11 +66,11 @@ done
 
 echo " "
 
-chmod +x ./autoconf.sh
-chmod +x ./build_files/build_environment/install_deps_rpi.sh
+chmod +x ./autoconf_pi5.sh
+chmod +x ./build_files/build_environment/install_deps_pi5.sh
 
 cd ..
-./blender/autoconf.sh
+./blender-rpi-v2.79/autoconf_pi5.sh
 
 echo "MESA_GL_VERSION_OVERRIDE=3.3 \\" > hardware_gl_blender27.sh
 echo "vblank_mode=0 \\" >> hardware_gl_blender27.sh

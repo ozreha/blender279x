@@ -1,4 +1,4 @@
-./blender/build_files/build_environment/install_deps_rpi.sh \
+./blender-rpi-v2.79/build_files/build_environment/install_deps_pi5.sh \
 --with-all \
  --build-python \
 --skip-numpy \
