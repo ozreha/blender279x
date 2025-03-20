@@ -3243,7 +3243,7 @@ LZO_COMPILE_TIME_ASSERT_HEADER(sizeof(lzo_uint64_t) == 8)
 #elif (LZO_OS_WIN32 || LZO_OS_WIN64) && ((LZO_CC_INTELC_MSC && (__INTEL_COMPILER >= 1010)) || (LZO_CC_MSC && (_MSC_VER >= 1400)))
 #define LZO_BITOPS_USE_MSC_BITSCAN 1
 #if (LZO_CC_MSC) && (LZO_ARCH_AMD64 || LZO_ARCH_I386)
-#include <intrin.h>
+#include <sse2neon.h>
 #endif
 #if (LZO_CC_MSC) && (LZO_ARCH_AMD64 || LZO_ARCH_I386)
 #pragma intrinsic(_BitScanReverse)

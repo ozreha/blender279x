@@ -21,7 +21,7 @@
 #include "libmv/tracking/brute_region_tracker.h"
 
 #ifdef __SSE2__
-#  include <emmintrin.h>
+#  include <sse2neon.h>
 #endif
 
 #include "libmv/base/aligned_malloc.h"

@@ -35,7 +35,7 @@
 #include <assert.h>
 
 #ifdef __SSE__
-#include <xmmintrin.h>
+#include <sse2neon.h>
 #endif
 
 #ifndef __BVH_H__

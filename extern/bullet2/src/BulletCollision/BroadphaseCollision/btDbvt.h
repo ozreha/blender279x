@@ -42,7 +42,7 @@ subject to the following restrictions:
 #define	DBVT_USE_TEMPLATE		0
 #endif
 
-// Use only intrinsics instead of inline asm
+// Use only i n t r i n s i cs instead of inline asm
 #define DBVT_USE_INTRINSIC_SSE	1
 
 // Using memmov for collideOCL
@@ -70,7 +70,7 @@ subject to the following restrictions:
 #if	(DBVT_SELECT_IMPL==DBVT_IMPL_SSE)||	\
 	(DBVT_MERGE_IMPL==DBVT_IMPL_SSE)||	\
 	(DBVT_INT0_IMPL==DBVT_IMPL_SSE)
-#include <emmintrin.h>
+#include <sse2neon.h>
 #endif
 
 //
@@ -582,10 +582,10 @@ DBVT_INLINE int			Select(	const btDbvtAabbMm& o,
 #else
     static ATTRIBUTE_ALIGNED16(const unsigned int)	mask[]={0x7fffffff,0x7fffffff,0x7fffffff,0x00000000 /*0x7fffffff*/};
 #endif
-	///@todo: the intrinsic version is 11% slower
+	///@todo: the i n t r i n s i c version is 11% slower
 #if DBVT_USE_INTRINSIC_SSE
 
-	union btSSEUnion ///NOTE: if we use more intrinsics, move btSSEUnion into the LinearMath directory
+	union btSSEUnion ///NOTE: if we use more i n t r i n s i c s, move btSSEUnion into the LinearMath directory
 	{
 	   __m128		ssereg;
 	   float		floats[4];

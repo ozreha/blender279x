@@ -6,9 +6,9 @@
 
 #include <string.h>//memset
 #ifdef  USE_SIMD
-#include <emmintrin.h>
+#include <sse2neon.h>
 #ifdef BT_ALLOW_SSE4
-#include <intrin.h>
+#include <sse2neon.h>
 #endif //BT_ALLOW_SSE4
 #endif //USE_SIMD
 

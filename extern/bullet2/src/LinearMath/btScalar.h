@@ -97,7 +97,7 @@ inline int	btGetVersion()
 			//you can manually enable this line or set it in the build system for a bit of performance gain (a few percent, dependent on usage)
 			//#define BT_USE_SSE_IN_API
 			#endif //BT_USE_SSE
-			#include <emmintrin.h>
+			#include <sse2neon.h>
 #endif
 
 		#endif//_XBOX
@@ -186,13 +186,13 @@ inline int	btGetVersion()
         #ifdef BT_USE_SSE
             // include appropriate SSE level
             #if defined (__SSE4_1__)
-                #include <smmintrin.h>
+                #include <sse2neon.h>
             #elif defined (__SSSE3__)
-                #include <tmmintrin.h>
+                #include <sse2neon.h>
             #elif defined (__SSE3__)
-                #include <pmmintrin.h>
+                #include <sse2neon.h>
             #else
-                #include <emmintrin.h>
+                #include <sse2neon.h>
             #endif
         #endif //BT_USE_SSE
     #elif defined( __ARM_NEON__ )

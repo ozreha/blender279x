@@ -1143,7 +1143,7 @@ compile_Python() {
         --enable-loadable-sqlite-extensions --with-dbmliborder=bdb \
         --with-computed-gotos --with-pymalloc
 
-    make -j3 && make install
+    make -j$THREADS && make install
     make clean
 
     if [ -d $_inst ]; then
@@ -1169,7 +1169,7 @@ compile_Python() {
   ./pip3 install --upgrade pip
   ./pip install requests
   ./pip install zstandard
-  ./pip install numpy
+  ./pip install numpy --no-binary :all:
   cd $CWD
 }
 
@@ -1372,6 +1372,8 @@ compile_OCIO() {
     fi
 
     cd $_src
+    sed -i 's/xmmintrin.h/sse2neon.h/g' ./src/core/SSE.h
+    sed -i 's/msse2/O3/g' ./CMakeLists.txt
 
     if [ "$OCIO_USE_REPO" = true ]; then
       # XXX For now, always update from latest repo...
@@ -1393,18 +1395,18 @@ compile_OCIO() {
     cmake_d="$cmake_d -D OCIO_BUILD_APPS=OFF"
     cmake_d="$cmake_d -D OCIO_BUILD_PYGLUE=OFF"
     cmake_d="$cmake_d -D STOP_ON_WARNING=OFF"
-    cmake_d="$cmake_d -D OCIO_USE_SSE=OFF"
+    #cmake_d="$cmake_d -D OCIO_USE_SSE=OFF"
 
     #if file /bin/cp | grep -q '32-bit'; then
     #  cflags="-fPIC -m32 -march=i686"
     #else
-      cflags="-fPIC"
+      cflags="-fPIC -O3 -march=armv8.2-a+fp+simd+crc -mtune=cortex-a76"
     #fi
     cflags="$cflags -Wno-error=unused-function -Wno-error=deprecated-declarations -Wno-nonnull"
 
     cmake $cmake_d -D CMAKE_CXX_FLAGS="$cflags" -D CMAKE_EXE_LINKER_FLAGS="-lgcc_s -lgcc" ..
 
-    make -j3 && make install
+    make -j$THREADS && make install
 
     # Force linking against static libs
     rm -f $_inst/lib/*.so*
@@ -1537,12 +1539,12 @@ compile_OPENEXR() {
     #if file /bin/cp | grep -q '32-bit'; then
       #cflags="-fPIC -m32 -march=i686"
     #else
-      cflags="-fPIC"
+      cflags="-fPIC -O3 -march=armv8.2-a+fp+simd+crc -mtune=cortex-a76"
     #fi
 
     cmake $cmake_d -D CMAKE_BUILD_TYPE=Release -D CMAKE_CXX_FLAGS="$cflags" -D CMAKE_EXE_LINKER_FLAGS="-lgcc_s -lgcc" $openexr_src_path
 
-    make -j3 && make install
+    make -j$THREADS && make install
 
     make clean
 
@@ -1682,12 +1684,12 @@ compile_OIIO() {
     #if file /bin/cp | grep -q '32-bit'; then
       #cflags="-fPIC -m32 -march=i686"
     #else
-      cflags="-fPIC"
+      cflags="-fPIC -O3 -march=armv8.2-a+fp+simd+crc -mtune=cortex-a76"
     #fi
 
     cmake $cmake_d -D CMAKE_CXX_FLAGS="$cflags" -D CMAKE_EXE_LINKER_FLAGS="-lgcc_s -lgcc" ..
 
-    make -j3 && make install
+    make -j$THREADS && make install
     make clean
 
     if [ -d $_inst ]; then
@@ -2295,7 +2297,7 @@ compile_ALEMBIC() {
     fi
 
     cmake $cmake_d ./
-    make -j3 install
+    make -j$THREADS install
     make clean
 
     if [ -d $_inst ]; then
@@ -2517,10 +2519,10 @@ compile_Embree() {
       #cmake_d="$cmake_d -D EMBREE_TBB_ROOT=$INST/tbb"
     #fi
 
-    cflags="-fPIC"
+    cflags="-fPIC -O3 -march=armv8.2-a+fp+simd+crc -mtune=cortex-a76 -flax-vector-conversions"
     cmake $cmake_d  -D CMAKE_CXX_FLAGS="$cflags" ../
     
-    make -j3 && make install
+    make -j$THREADS && make install
     make clean
 
     if [ ! -d $_inst ]; then
@@ -2634,7 +2636,7 @@ compile_FFmpeg() {
         --disable-outdev=alsa --disable-indev=sdl --disable-indev=alsa --disable-indev=jack \
         --disable-indev=lavfi $extra
 
-    make -j3 && make install
+    make -j$THREADS && make install
     make clean
 
     if [ -d $_inst ]; then
@@ -2732,6 +2734,40 @@ install_DEB() {
   PRINT "`eval _echo "$COMMON_INFO"`"
   PRINT ""
 
+  #################### CFLAGS & CXXFLAGS ########################
+  echo " "
+  WARNING "Temporary compiler flags will be set."
+  export CFLAGS="-fPIC -O3 -march=armv8.2-a+fp+simd -mtune=cortex-a76"
+  export CXXFLAGS="-fPIC -O3 -march=armv8.2-a+fp+simd -mtune=cortex-a76"
+  echo "CFLAGS=$CFLAGS"
+  echo "CXXFLAGS=$CXXFLAGS"
+  echo " "
+  
+  #if [ "$NO_CONFIRM" = false ]; then
+    #read -p "Do you want to continue (Y/n)?"
+    #[ "$(echo ${REPLY:=Y} | tr [:upper:] [:lower:])" != "y" ] && exit
+  #fi
+
+  ####### trying to get sse2neon.h from the internet ############
+  PRINT " "
+  if ! test -f /usr/include/sse2neon.h; then
+    wget https://github.com/DLTcollab/sse2neon/archive/refs/tags/v1.7.0.tar.gz
+    if test -f ./v1.7.0.tar.gz; then
+      tar -xf ./v1.7.0.tar.gz
+      sudo cp ./sse2neon-1.7.0/sse2neon.h /usr/include/
+      sudo rm ./sse2neon-1.7.0/ -rf
+      sudo rm ./v1.7.0.tar.gz
+      SUCCESS "sse2neon.h retrieved from internet and copied to /usr/include/"
+    else
+      ERROR "sse2neon.h couldn't retrieved from internet"
+      INFO "/usr/include/sse2neon.h needed to continue. Exiting ..."
+      exit 0
+    fi
+  else
+    SUCCESS "sse2neon.h found in /usr/include"
+  fi  
+  PRINT " "
+  ###############################################################
 
   if [ ! $SUDO ]; then
     WARNING "--no-sudo enabled, impossible to run apt-get update, you'll have to do it yourself..."
@@ -4614,8 +4650,8 @@ print_info() {
   PRINT ""  
   PRINT ""
   PRINT ""
-  PRINT "  make -j3 BUILD_CMAKE_ARGS=\"$_buildargs\"" > ./blender/make_for_pi.sh
-  cd ./blender
+  PRINT "  make -j$THREADS BUILD_CMAKE_ARGS=\"$_buildargs\"" > ./blender-rpi-v2.79/make_for_pi.sh
+  cd ./blender-rpi-v2.79
   sh ./make_for_pi.sh
   END_TIME=$(date +%s)
   PRINT ""
@@ -4628,12 +4664,12 @@ print_info() {
     SUCCESS "Blender-2.79x built in  ${BRIGHT}${YELLOW}$((($END_TIME - $START_TIME) /  60))${NORMAL}${YELLOW} minutes. "
     PRINT ""
     PRINT ""
-    RUNFROM " ${NORMAL}$INFO_PATH/${BRIGHT}${YELLOW}blender27.sh${NORMAL}${YELLOW} (hardware gl for better performance, recommended)"
+    RUNFROM " ${NORMAL}$INFO_PATH/${BRIGHT}${YELLOW}hardware_gl_blender27.sh${NORMAL}${YELLOW} (For better performance, recommended.)"
     PRINT ""  
     PRINT "or"  
     PRINT ""  
-    RUNFROM " ${NORMAL}$INFO_PATH/${BRIGHT}${YELLOW}software_gl_blender27.sh${NORMAL}${YELLOW} (slower, with not so important additional rendering features)"
-    PRINT ""  
+    RUNFROM " ${NORMAL}$INFO_PATH/${BRIGHT}${YELLOW}software_gl_blender27.sh${NORMAL}${YELLOW} (For additional display features, slower.)"
+    PRINT ""    
   else
     echo ""
     ERROR "Something went wrong!" 
@@ -4667,4 +4703,3 @@ export LANG
 
 CXXFLAGS=$CXXFLAGS_BACK
 export CXXFLAGS
-

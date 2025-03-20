@@ -32,9 +32,9 @@
 #ifndef FREE_WINDOWS64
 
 #ifdef _MSC_VER
-#  include <intrin.h>
+#  include <sse2neon.h>
 #elif (defined(__x86_64__) || defined(__i386__))
-#  include <x86intrin.h>
+#  include <sse2neon.h>
 #endif
 
 #else

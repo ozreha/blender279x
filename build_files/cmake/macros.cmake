@@ -830,7 +830,7 @@ macro(TEST_SSE_SUPPORT
 	if(NOT DEFINED SUPPORT_SSE_BUILD)
 		# result cached
 		check_c_source_runs("
-			#include <xmmintrin.h>
+			#include <sse2neon.h>
 			int main(void) { __m128 v = _mm_setzero_ps(); return 0; }"
 		SUPPORT_SSE_BUILD)
 
@@ -844,7 +844,7 @@ macro(TEST_SSE_SUPPORT
 	if(NOT DEFINED SUPPORT_SSE2_BUILD)
 		# result cached
 		check_c_source_runs("
-			#include <emmintrin.h>
+			#include <sse2neon.h>
 			int main(void) { __m128d v = _mm_setzero_pd(); return 0; }"
 		SUPPORT_SSE2_BUILD)
 

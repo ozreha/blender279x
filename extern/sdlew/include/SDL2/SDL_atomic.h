@@ -8,7 +8,7 @@
 #include "begin_code.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500)
-#include <intrin.h>
+#include <sse2neon.h>
 #define HAVE_MSC_ATOMICS 1
 #endif
 

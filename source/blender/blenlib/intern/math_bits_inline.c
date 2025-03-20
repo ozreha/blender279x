@@ -23,7 +23,7 @@
 #define __MATH_BITS_INLINE_C__
 
 #ifdef _MSC_VER
-#  include <intrin.h>
+#  include <sse2neon.h>
 #endif
 
 #include "BLI_math_bits.h"

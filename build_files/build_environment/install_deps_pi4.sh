@@ -19,6 +19,8 @@
 
 # A shell script installing/building all needed dependencies to build Blender, for some Linux distributions.
 
+START_TIME=$(date +%s)
+
 ##### Args and Help Handling #####
 
 # Parse command line!
@@ -198,7 +200,7 @@ ARGUMENTS_INFO="\"COMMAND LINE ARGUMENTS:
           This may make things simpler and allow working around some distribution bugs, but on the other hand it will
           use much more space on your hard drive.
         * Please be careful with the Blender building options if you have both 'official' dev packages and
-          install_deps' built ones on your system, by default CMake will prefer official packages, which may lead to
+          install_deps_rpi' built ones on your system, by default CMake will prefer official packages, which may lead to
           linking issues. Please ensure your CMake configuration always uses all correct library paths.
         * If the “force-built” library is a dependency of others, it will force the build
           of those libraries as well (e.g. --build-boost also implies --build-oiio and --build-osl...).
@@ -306,40 +308,40 @@ NO_BUILD=false
 NO_CONFIRM=false
 USE_CXX11=true
 
-PYTHON_VERSION="3.7.0"
+PYTHON_VERSION="3.7.17"
 PYTHON_VERSION_MIN="3.7"
 PYTHON_FORCE_BUILD=false
 PYTHON_FORCE_REBUILD=false
 PYTHON_SKIP=false
 
-NUMPY_VERSION="1.15.0"
+NUMPY_VERSION="1.17.5"
 NUMPY_VERSION_MIN="1.8"
 NUMPY_FORCE_BUILD=false
 NUMPY_FORCE_REBUILD=false
 NUMPY_SKIP=false
 
-BOOST_VERSION="1.68.0"
+BOOST_VERSION="1.74.0"
 BOOST_VERSION_MIN="1.49"
 BOOST_FORCE_BUILD=false
 BOOST_FORCE_REBUILD=false
 BOOST_SKIP=false
 
-OCIO_VERSION="1.1.0"
+OCIO_VERSION="1.1.1"
 OCIO_VERSION_MIN="1.0"
 OCIO_FORCE_BUILD=false
 OCIO_FORCE_REBUILD=false
 OCIO_SKIP=false
 
-OPENEXR_VERSION="2.3.0"
-OPENEXR_VERSION_MIN="2.0.1"
-ILMBASE_VERSION="2.3.0"
-ILMBASE_VERSION_MIN="2.3"
+OPENEXR_VERSION="2.5.9"
+OPENEXR_VERSION_SHORT="2.5"
+OPENEXR_VERSION_MIN="2.4"
+OPENEXR_VERSION_MEX="3.0"
 OPENEXR_FORCE_BUILD=false
 OPENEXR_FORCE_REBUILD=false
 OPENEXR_SKIP=false
 _with_built_openexr=false
 
-OIIO_VERSION="1.8.13"
+OIIO_VERSION="2.2.21.0"
 OIIO_VERSION_MIN="1.8.13"
 OIIO_VERSION_MAX="99.99.0"  # UNKNOWN currently # Not supported by current OSL...
 OIIO_FORCE_BUILD=false
@@ -389,7 +391,10 @@ OPENCOLLADA_FORCE_REBUILD=false
 OPENCOLLADA_SKIP=false
 
 
-EMBREE_VERSION="3.2.4"
+EMBREE_VERSION="3.13.5"
+EMBREE_VERSION_SHORT="3.13"
+EMBREE_VERSION_MIN="3.13"
+EMBREE_VERSION_MEX="4.0"
 EMBREE_FORCE_BUILD=false
 EMBREE_FORCE_REBUILD=false
 EMBREE_SKIP=false
@@ -462,6 +467,15 @@ ERROR() {
 WARNING() {
   _echo "${BRIGHT}${YELLOW}WARNING! ${NORMAL}${YELLOW}$@${NORMAL}"
 }
+
+SUCCESS() {
+  _echo "${BRIGHT}${YELLOW}SUCCESS! ${NORMAL}${YELLOW}$@${NORMAL}"
+}
+
+RUNFROM() {
+  _echo "${GREEN}Run from: ${BRIGHT}${YELLOW}$@${NORMAL}"
+}
+
 
 INFO() {
   _echo "${GREEN}$@${NORMAL}"
@@ -757,8 +771,8 @@ fi
 
 WARNING "****WARNING****"
 PRINT "If you are experiencing issues building Blender, _*TRY A FRESH, CLEAN BUILD FIRST*_!"
-PRINT "The same goes for install_deps itself, if you encounter issues, please first erase everything in $SRC and $INST"
-PRINT "(provided obviously you did not add anything yourself in those dirs!), and run install_deps.sh again!"
+PRINT "The same goes for install_deps_rpi itself, if you encounter issues, please first erase everything in $SRC and $INST"
+PRINT "(provided obviously you did not add anything yourself in those dirs!), and run install_deps_rpi.sh again!"
 PRINT "Often, changes in the libs built by this script, or in your distro package, cannot be handled simply, so..."
 PRINT ""
 PRINT "You may also try to use the '--build-foo' options to bypass your distribution's packages"
@@ -766,7 +780,7 @@ PRINT "for some troublesome/buggy libraries..."
 PRINT ""
 PRINT ""
 PRINT "Ran with:"
-PRINT "    install_deps.sh $COMMANDLINE"
+PRINT "    install_deps_rpi.sh $COMMANDLINE"
 PRINT ""
 PRINT ""
 
@@ -785,11 +799,10 @@ OCIO_SOURCE=( "https://github.com/imageworks/OpenColorIO/archive/v$OCIO_VERSION.
 #~ OCIO_SOURCE_REPO_UID="6de971097c7f552300f669ed69ca0b6cf5a70843"
 
 OPENEXR_USE_REPO=false
-#~ OPENEXR_SOURCE=( "https://github.com/openexr/openexr/releases/download/v$OPENEXR_VERSION/openexr-$OPENEXR_VERSION.tar.gz" )
+OPENEXR_SOURCE=( "https://github.com/AcademySoftwareFoundation/openexr/archive/v$OPENEXR_VERSION.tar.gz" )
+OPENEXR_SOURCE_REPO=( "https://github.com/AcademySoftwareFoundation/openexr.git" )
 OPENEXR_SOURCE_REPO_UID="0ac2ea34c8f3134148a5df4052e40f155b76f6fb"
-OPENEXR_SOURCE=( "https://github.com/openexr/openexr/archive/$OPENEXR_SOURCE_REPO_UID.tar.gz" )
-#~ OPENEXR_SOURCE_REPO=( "https://github.com/mont29/openexr.git" )
-ILMBASE_SOURCE=( "https://github.com/openexr/openexr/releases/download/v$ILMBASE_VERSION/ilmbase-$ILMBASE_VERSION.tar.gz" )
+#~ OPENEXR_SOURCE=( "https://github.com/openexr/openexr/archive/$OPENEXR_SOURCE_REPO_UID.tar.gz" )
 
 OIIO_USE_REPO=false
 OIIO_SOURCE=( "https://github.com/OpenImageIO/oiio/archive/Release-$OIIO_VERSION.tar.gz" )
@@ -821,8 +834,8 @@ OSD_SOURCE=( "https://github.com/PixarAnimationStudios/OpenSubdiv/archive/v${OSD
 
 OPENVDB_USE_REPO=false
 OPENVDB_BLOSC_SOURCE=( "https://github.com/Blosc/c-blosc/archive/v${OPENVDB_BLOSC_VERSION}.tar.gz" )
-OPENVDB_SOURCE=( "https://github.com/dreamworksanimation/openvdb/archive/v${OPENVDB_VERSION}.tar.gz" )
-#~ OPENVDB_SOURCE_REPO=( "https:///dreamworksanimation/openvdb.git" )
+OPENVDB_SOURCE=( "https://github.com/AcademySoftwareFoundation/openvdb/archive/v${OPENVDB_VERSION}.tar.gz" )
+#~ OPENVDB_SOURCE_REPO=( "https://github.com/AcademySoftwareFoundation/openvdb.git" )
 #~ OPENVDB_SOURCE_REPO_UID="404659fffa659da075d1c9416e4fc939139a84ee"
 #~ OPENVDB_SOURCE_REPO_BRANCH="dev"
 
@@ -868,8 +881,8 @@ Those libraries should be available as packages in all recent distributions (opt
 DEPS_SPECIFIC_INFO="\"BUILDABLE DEPENDENCIES:
 
 The following libraries will probably not all be available as packages in your distribution
-(install_deps will by default try to install packages, and fall back to building missing ones).
-You can force install_deps to build those with '--build-all' or relevant 'build-foo' options, see '--help' message.
+(install_deps_rpi will by default try to install packages, and fall back to building missing ones).
+You can force install_deps_rpi to build those with '--build-all' or relevant 'build-foo' options, see '--help' message.
 You may also want to build them yourself (optional ones are [between brackets]):
 
     * Python $PYTHON_VERSION_MIN (from $PYTHON_SOURCE).
@@ -1143,11 +1156,21 @@ compile_Python() {
     magic_compile_set python-$PYTHON_VERSION $py_magic
 
     cd $CWD
+
     INFO "Done compiling Python-$PYTHON_VERSION!"
   else
     INFO "Own Python-$PYTHON_VERSION is up to date, nothing to do!"
     INFO "If you want to force rebuild of this lib, use the --force-python option."
   fi
+  
+  run_ldconfig "python"
+  
+  cd $_inst/bin
+  ./pip3 install --upgrade pip
+  ./pip install requests
+  ./pip install zstandard
+  ./pip install numpy --no-binary :all:
+  cd $CWD
 }
 
 ##### Build Numpy #####
@@ -1271,7 +1294,7 @@ compile_Boost() {
     if [ ! -f $_src/b2 ]; then
       ./bootstrap.sh
     fi
-    ./b2 -j$THREADS -a $BOOST_BUILD_MODULES \
+    ./b2 -j3 -a $BOOST_BUILD_MODULES \
          --prefix=$_inst --disable-icu boost.locale.icu=off install
     ./b2 --clean
 
@@ -1349,6 +1372,8 @@ compile_OCIO() {
     fi
 
     cd $_src
+    sed -i 's/xmmintrin.h/sse2neon.h/g' ./src/core/SSE.h
+    sed -i 's/msse2/O3/g' ./CMakeLists.txt
 
     if [ "$OCIO_USE_REPO" = true ]; then
       # XXX For now, always update from latest repo...
@@ -1370,13 +1395,14 @@ compile_OCIO() {
     cmake_d="$cmake_d -D OCIO_BUILD_APPS=OFF"
     cmake_d="$cmake_d -D OCIO_BUILD_PYGLUE=OFF"
     cmake_d="$cmake_d -D STOP_ON_WARNING=OFF"
+    #cmake_d="$cmake_d -D OCIO_USE_SSE=OFF"
 
-    if file /bin/cp | grep -q '32-bit'; then
-      cflags="-fPIC -m32 -march=i686"
-    else
-      cflags="-fPIC"
-    fi
-    cflags="$cflags -Wno-error=unused-function -Wno-error=deprecated-declarations"
+    #if file /bin/cp | grep -q '32-bit'; then
+    #  cflags="-fPIC -m32 -march=i686"
+    #else
+      cflags="-fPIC -O3 -march=armv8-a+fp+simd+crc -mtune=cortex-a72"
+    #fi
+    cflags="$cflags -Wno-error=unused-function -Wno-error=deprecated-declarations -Wno-nonnull"
 
     cmake $cmake_d -D CMAKE_CXX_FLAGS="$cflags" -D CMAKE_EXE_LINKER_FLAGS="-lgcc_s -lgcc" ..
 
@@ -1410,108 +1436,33 @@ compile_OCIO() {
   run_ldconfig "ocio"
 }
 
-#### Build ILMBase ####
-_init_ilmbase() {
-  _src=$SRC/ILMBase-$ILMBASE_VERSION
-  _git=false
-  _inst=$TMP/ilmbase-$ILMBASE_VERSION
-  _inst_shortcut=$TMP/ilmbase
-}
+# ----------------------------------------------------------------------------
+# Build OpenEXR (and ILMBase).
 
-clean_ILMBASE() {
-  _init_ilmbase
-  _clean
-}
-
-compile_ILMBASE() {
-  if [ "$NO_BUILD" = true ]; then
-    WARNING "--no-build enabled, ILMBase will not be compiled!"
-    return
-  fi
-
-  # To be changed each time we make edits that would modify the compiled result!
-  ilmbase_magic=10
-  _init_ilmbase
-
-  # Clean install if needed!
-  magic_compile_check ilmbase-$ILMBASE_VERSION $ilmbase_magic
-  if [ $? -eq 1 -o "$OPENEXR_FORCE_REBUILD" = true ]; then
-    clean_ILMBASE
-    rm -rf $_openexr_inst
-  fi
-
-  if [ ! -d $_openexr_inst ]; then
-    INFO "Building ILMBase-$ILMBASE_VERSION"
-
-    # Rebuild dependencies as well!
-    OPENEXR_FORCE_BUILD=true
-    OPENEXR_FORCE_REBUILD=true
-
-    prepare_opt
-
-    if [ ! -d $_src ]; then
-      INFO "Downloading ILMBase-$ILMBASE_VERSION"
-      mkdir -p $SRC
-      download ILMBASE_SOURCE[@] $_src.tar.gz
-
-      INFO "Unpacking ILMBase-$ILMBASE_VERSION"
-      tar -C $SRC --transform "s,(.*/?)ilmbase-[^/]*(.*),\1ILMBase-$ILMBASE_VERSION\2,x" -xf $_src.tar.gz
-
-    fi
-
-    cd $_src
-    # Always refresh the whole build!
-    if [ -d build ]; then
-      rm -rf build
-    fi
-    mkdir build
-    cd build
-
-    cmake_d="-D CMAKE_BUILD_TYPE=Release"
-    cmake_d="$cmake_d -D CMAKE_PREFIX_PATH=$_inst"
-    cmake_d="$cmake_d -D CMAKE_INSTALL_PREFIX=$_inst"
-    cmake_d="$cmake_d -D BUILD_SHARED_LIBS=ON"
-    cmake_d="$cmake_d -D NAMESPACE_VERSIONING=OFF"  # VERY IMPORTANT!!!
-
-    if file /bin/cp | grep -q '32-bit'; then
-      cflags="-fPIC -m32 -march=i686"
-    else
-      cflags="-fPIC"
-    fi
-
-    cmake $cmake_d -D CMAKE_CXX_FLAGS="$cflags" -D CMAKE_EXE_LINKER_FLAGS="-lgcc_s -lgcc" ..
-
-    make -j$THREADS && make install
-
-    make clean
-
-    if [ -d $_inst ]; then
-      _create_inst_shortcut
-    else
-      ERROR "ILMBase-$ILMBASE_VERSION failed to compile, exiting"
-      exit 1
-    fi
-    cd $CWD
-    INFO "Done compiling ILMBase-$ILMBASE_VERSION!"
-  else
-    INFO "Own ILMBase-$ILMBASE_VERSION is up to date, nothing to do!"
-    INFO "If you want to force rebuild of this lib (and openexr), use the --force-openexr option."
-  fi
-
-  magic_compile_set ilmbase-$ILMBASE_VERSION $ilmbase_magic
-}
-
-#### Build OpenEXR ####
 _init_openexr() {
   _src=$SRC/OpenEXR-$OPENEXR_VERSION
-  _git=true
-  _inst=$_openexr_inst
+  _git=false
+  _inst=$INST/openexr-$OPENEXR_VERSION_SHORT
   _inst_shortcut=$INST/openexr
 }
 
+_update_deps_openexr() {
+  if [ "$1" = true ]; then
+    OIIO_FORCE_BUILD=true
+    ALEMBIC_FORCE_BUILD=true
+  fi
+  if [ "$2" = true ]; then
+    OIIO_FORCE_REBUILD=true
+    ALEMBIC_FORCE_REBUILD=true
+  fi
+}
+
 clean_OPENEXR() {
-  clean_ILMBASE
   _init_openexr
+  if [ -d $_inst ]; then
+    # Force rebuilding the dependencies if needed.
+    _update_deps_openexr false true
+  fi
   _clean
 }
 
@@ -1522,7 +1473,11 @@ compile_OPENEXR() {
   fi
 
   # To be changed each time we make edits that would modify the compiled result!
-  openexr_magic=14
+  openexr_magic=15
+  _init_openexr
+
+  # Force having own builds for the dependencies.
+  _update_deps_openexr true false
 
   # Clean install if needed!
   magic_compile_check openexr-$OPENEXR_VERSION $openexr_magic
@@ -1530,20 +1485,15 @@ compile_OPENEXR() {
     clean_OPENEXR
   fi
 
-  _openexr_inst=$INST/openexr-$OPENEXR_VERSION
-  compile_ILMBASE
   PRINT ""
-  _ilmbase_inst=$_inst_shortcut
-  _init_openexr
 
   if [ ! -d $_inst ]; then
-    INFO "Building OpenEXR-$OPENEXR_VERSION"
+    INFO "Building ILMBase-$OPENEXR_VERSION and OpenEXR-$OPENEXR_VERSION"
 
-    # Rebuild dependencies as well!
-    OIIO_FORCE_BUILD=true
-    OIIO_FORCE_REBUILD=true
+    # Force rebuilding the dependencies.
+    _update_deps_openexr true true
 
-    prepare_opt
+    prepare_inst
 
     if [ ! -d $_src ]; then
       INFO "Downloading OpenEXR-$OPENEXR_VERSION"
@@ -1566,9 +1516,9 @@ compile_OPENEXR() {
       git pull origin master
       git checkout $OPENEXR_SOURCE_REPO_UID
       git reset --hard
-      oiio_src_path="../OpenEXR"
+      openexr_src_path="../OpenEXR"
     else
-      oiio_src_path=".."
+      openexr_src_path=".."
     fi
 
     # Always refresh the whole build!
@@ -1578,30 +1528,27 @@ compile_OPENEXR() {
     mkdir build
     cd build
 
-    cmake_d="-D CMAKE_BUILD_TYPE=Release"
-    cmake_d="$cmake_d -D CMAKE_PREFIX_PATH=$_inst"
     cmake_d="$cmake_d -D CMAKE_INSTALL_PREFIX=$_inst"
-    cmake_d="$cmake_d -D ILMBASE_PACKAGE_PREFIX=$_ilmbase_inst"
+    cmake_d="$cmake_d -D CMAKE_INSTALL_DOCDIR=/dev/null"  # Hack, there is no option to disable that currently...
     cmake_d="$cmake_d -D BUILD_SHARED_LIBS=ON"
-    cmake_d="$cmake_d -D NAMESPACE_VERSIONING=OFF"  # VERY IMPORTANT!!!
+    cmake_d="$cmake_d -D BUILD_TESTING=OFF"
+    cmake_d="$cmake_d -D OPENEXR_BUILD_UTILS=OFF"
+    cmake_d="$cmake_d -D PYILMBASE_ENABLE=OFF"
+    cmake_d="$cmake_d -D OPENEXR_VIEWERS_ENABLE=OFF"
 
-    if file /bin/cp | grep -q '32-bit'; then
-      cflags="-fPIC -m32 -march=i686"
-    else
-      cflags="-fPIC"
-    fi
+    #if file /bin/cp | grep -q '32-bit'; then
+      #cflags="-fPIC -m32 -march=i686"
+    #else
+      cflags="-fPIC -O3 -march=armv8-a+fp+simd+crc -mtune=cortex-a72"
+    #fi
 
-    cmake $cmake_d -D CMAKE_CXX_FLAGS="$cflags" -D CMAKE_EXE_LINKER_FLAGS="-lgcc_s -lgcc" $oiio_src_path
+    cmake $cmake_d -D CMAKE_BUILD_TYPE=Release -D CMAKE_CXX_FLAGS="$cflags" -D CMAKE_EXE_LINKER_FLAGS="-lgcc_s -lgcc" $openexr_src_path
 
     make -j$THREADS && make install
 
     make clean
 
-    if [ -d $_inst ]; then
-      _create_inst_shortcut
-      # Copy ilmbase files here (blender expects same dir for ilmbase and openexr :/).
-      cp -an $_ilmbase_inst/* $_inst_shortcut
-    else
+    if [ ! -d $_inst ]; then
       ERROR "OpenEXR-$OPENEXR_VERSION failed to compile, exiting"
       exit 1
     fi
@@ -1617,9 +1564,12 @@ compile_OPENEXR() {
 
   _with_built_openexr=true
 
-  # Just always run it, much simpler this way!
+  if [ -d $_inst ]; then
+    _create_inst_shortcut
+  fi
   run_ldconfig "openexr"
 }
+
 
 #### Build OIIO ####
 _init_oiio() {
@@ -1667,7 +1617,7 @@ compile_OIIO() {
       else
         download OIIO_SOURCE[@] "$_src.tar.gz"
         INFO "Unpacking OpenImageIO-$OIIO_VERSION"
-        tar -C $SRC --transform "s,(.*/?)oiio-Release-[^/]*(.*),\1OpenImageIO-$OIIO_VERSION\2,x" -xf $_src.tar.gz
+        tar -C $SRC --transform "s,(.*/?)OpenImageIO-Release-[^/]*(.*),\1OpenImageIO-$OIIO_VERSION\2,x" -xf $_src.tar.gz
       fi
     fi
 
@@ -1694,13 +1644,13 @@ compile_OIIO() {
     cmake_d="$cmake_d -D STOP_ON_WARNING=OFF"
     cmake_d="$cmake_d -D BUILDSTATIC=OFF"
     cmake_d="$cmake_d -D LINKSTATIC=OFF"
-    cmake_d="$cmake_d -D USE_SIMD=sse2"
+    #cmake_d="$cmake_d -D USE_SIMD=sse2"
 
     cmake_d="$cmake_d -D OPENEXR_VERSION=$OPENEXR_VERSION"
 
     if [ "$_with_built_openexr" = true ]; then
-      cmake_d="$cmake_d -D ILMBASE_HOME=$INST/openexr"
-      cmake_d="$cmake_d -D OPENEXR_HOME=$INST/openexr"
+      cmake_d="$cmake_d -D ILMBASE_ROOT=$INST/openexr"
+      cmake_d="$cmake_d -D OPENEXR_ROOT=$INST/openexr"
       INFO "ILMBASE_HOME=$INST/openexr"
     fi
 
@@ -1731,11 +1681,11 @@ compile_OIIO() {
 
     cmake_d="$cmake_d -D OIIO_BUILD_CPP11=ON"
 
-    if file /bin/cp | grep -q '32-bit'; then
-      cflags="-fPIC -m32 -march=i686"
-    else
-      cflags="-fPIC"
-    fi
+    #if file /bin/cp | grep -q '32-bit'; then
+      #cflags="-fPIC -m32 -march=i686"
+    #else
+      cflags="-fPIC -O3 -march=armv8-a+fp+simd+crc -mtune=cortex-a72"
+    #fi
 
     cmake $cmake_d -D CMAKE_CXX_FLAGS="$cflags" -D CMAKE_EXE_LINKER_FLAGS="-lgcc_s -lgcc" ..
 
@@ -2461,16 +2411,31 @@ compile_OpenCOLLADA() {
   fi
 }
 
-#### Build Embree ####
+# ----------------------------------------------------------------------------
+# Build Embree
+
 _init_embree() {
   _src=$SRC/embree-$EMBREE_VERSION
   _git=true
-  _inst=$INST/embree-$EMBREE_VERSION
+  _inst=$INST/embree-$EMBREE_VERSION_SHORT
   _inst_shortcut=$INST/embree
+}
+
+_update_deps_embree() {
+  if [ "$1" = true ]; then
+    OPENPGL_FORCE_BUILD=true
+  fi
+  if [ "$2" = true ]; then
+    OPENPGL_FORCE_REBUILD=true
+  fi
 }
 
 clean_Embree() {
   _init_embree
+  if [ -d $_inst ]; then
+    # Force rebuilding the dependencies if needed.
+    _update_deps_embree false true
+  fi
   _clean
 }
 
@@ -2481,8 +2446,11 @@ compile_Embree() {
   fi
 
   # To be changed each time we make edits that would modify the compiled results!
-  embree_magic=9
+  embree_magic=12
   _init_embree
+
+  # Force having own builds for the dependencies.
+  _update_deps_embree true false
 
   # Clean install if needed!
   magic_compile_check embree-$EMBREE_VERSION $embree_magic
@@ -2493,7 +2461,10 @@ compile_Embree() {
   if [ ! -d $_inst ]; then
     INFO "Building Embree-$EMBREE_VERSION"
 
-    prepare_opt
+    # Force rebuilding the dependencies.
+    _update_deps_embree true true
+
+    #prepare_inst
 
     if [ ! -d $_src ]; then
       mkdir -p $SRC
@@ -2507,6 +2478,14 @@ compile_Embree() {
     fi
 
     cd $_src
+    
+    sed -i '485 i ############################### ' ./CMakeLists.txt
+    sed -i '485 i SET(EMBREE_ISA_AVX2 ON)' ./CMakeLists.txt
+    sed -i '485 i SET(EMBREE_ISA_AVX ON)' ./CMakeLists.txt
+    sed -i '485 i SET(EMBREE_ISA_SSE42 ON)' ./CMakeLists.txt
+    sed -i '485 i SET(EMBREE_ISA_SSE2 ON)' ./CMakeLists.txt
+    sed -i '485 i ####### inserted by sed ####### ' ./CMakeLists.txt
+    
 
     if [ "$EMBREE_USE_REPO" = true ]; then
       git pull origin $EMBREE_REPO_BRANCH
@@ -2531,17 +2510,22 @@ compile_Embree() {
     cmake_d="$cmake_d -D EMBREE_RAY_MASK=ON"
     cmake_d="$cmake_d -D EMBREE_FILTER_FUNCTION=ON"
     cmake_d="$cmake_d -D EMBREE_BACKFACE_CULLING=OFF"
-    cmake_d="$cmake_d -D EMBREE_TASKING_SYSTEM=INTERNAL"
     cmake_d="$cmake_d -D EMBREE_MAX_ISA=AVX2"
+    cmake_d="$cmake_d -D EMBREE_ARM=ON"
+    cmake_d="$cmake_d -D EMBREE_IGNORE_CMAKE_CXX_FLAGS=OFF"
 
-    cmake $cmake_d ../
+    cmake_d="$cmake_d -D EMBREE_TASKING_SYSTEM=INTERNAL"
+    #if [ -d $INST/tbb ]; then
+      #cmake_d="$cmake_d -D EMBREE_TBB_ROOT=$INST/tbb"
+    #fi
 
+    cflags="-fPIC -O3 -march=armv8-a+fp+simd+crc -mtune=cortex-a72 -flax-vector-conversions"
+    cmake $cmake_d  -D CMAKE_CXX_FLAGS="$cflags" ../
+    
     make -j$THREADS && make install
     make clean
 
-    if [ -d $_inst ]; then
-      _create_inst_shortcut
-    else
+    if [ ! -d $_inst ]; then
       ERROR "Embree-$EMBREE_VERSION failed to compile, exiting"
       exit 1
     fi
@@ -2554,6 +2538,12 @@ compile_Embree() {
     INFO "Own Embree-$EMBREE_VERSION is up to date, nothing to do!"
     INFO "If you want to force rebuild of this lib, use the --force-embree option."
   fi
+
+  if [ -d $_inst ]; then
+    _create_inst_shortcut
+  fi
+  
+  run_ldconfig "embree"
 }
 
 #### Build FFMPEG ####
@@ -2633,7 +2623,7 @@ compile_FFmpeg() {
     ./configure --cc="gcc -Wl,--as-needed" \
         --extra-ldflags="-pthread -static-libgcc" \
         --prefix=$_inst --enable-static \
-        --disable-ffplay --disable-ffserver --disable-doc \
+        --disable-ffplay --disable-doc \
         --enable-gray \
         --enable-avfilter --disable-vdpau \
         --disable-bzlib --disable-libgsm --disable-libspeex \
@@ -2744,10 +2734,40 @@ install_DEB() {
   PRINT "`eval _echo "$COMMON_INFO"`"
   PRINT ""
 
-  if [ "$NO_CONFIRM" = false ]; then
-    read -p "Do you want to continue (Y/n)?"
-    [ "$(echo ${REPLY:=Y} | tr [:upper:] [:lower:])" != "y" ] && exit
-  fi
+  #################### CFLAGS & CXXFLAGS ########################
+  echo " "
+  WARNING "Temporary compiler flags will be set."
+  export CFLAGS="-fPIC -O3 -march=armv8-a+fp+simd+crc -mtune=cortex-a72"
+  export CXXFLAGS="-fPIC -O3 -march=armv8-a+fp+simd+crc -mtune=cortex-a72"
+  echo "CFLAGS=$CFLAGS"
+  echo "CXXFLAGS=$CXXFLAGS"
+  echo " "
+  
+  #if [ "$NO_CONFIRM" = false ]; then
+    #read -p "Do you want to continue (Y/n)?"
+    #[ "$(echo ${REPLY:=Y} | tr [:upper:] [:lower:])" != "y" ] && exit
+  #fi
+
+  ####### trying to get sse2neon.h from the internet ############
+  PRINT " "
+  if ! test -f /usr/include/sse2neon.h; then
+    wget https://github.com/DLTcollab/sse2neon/archive/refs/tags/v1.7.0.tar.gz
+    if test -f ./v1.7.0.tar.gz; then
+      tar -xf ./v1.7.0.tar.gz
+      sudo cp ./sse2neon-1.7.0/sse2neon.h /usr/include/
+      sudo rm ./sse2neon-1.7.0/ -rf
+      sudo rm ./v1.7.0.tar.gz
+      SUCCESS "sse2neon.h retrieved from internet and copied to /usr/include/"
+    else
+      ERROR "sse2neon.h couldn't retrieved from internet"
+      INFO "/usr/include/sse2neon.h needed to continue. Exiting ..."
+      exit 0
+    fi
+  else
+    SUCCESS "sse2neon.h found in /usr/include"
+  fi  
+  PRINT " "
+  ###############################################################
 
   if [ ! $SUDO ]; then
     WARNING "--no-sudo enabled, impossible to run apt-get update, you'll have to do it yourself..."
@@ -2761,12 +2781,13 @@ install_DEB() {
   THEORA_DEV="libtheora-dev"
 
   _packages="gawk cmake cmake-curses-gui build-essential libjpeg-dev libpng-dev libtiff-dev \
-             git libfreetype6-dev libx11-dev flex bison libtbb-dev libxxf86vm-dev \
+             libfreetype6-dev libx11-dev flex bison libtbb-dev libxxf86vm-dev \
              libxcursor-dev libxi-dev wget libsqlite3-dev libxrandr-dev libxinerama-dev \
              libbz2-dev libncurses5-dev libssl-dev liblzma-dev libreadline-dev \
              libopenal-dev libglew-dev yasm $THEORA_DEV $VORBIS_DEV $OGG_DEV \
-             libsdl1.2-dev libfftw3-dev patch bzip2 libxml2-dev libtinyxml-dev libjemalloc-dev"
-             # libglewmx-dev  (broken in deb testing currently...)
+             libsdl1.2-dev libfftw3* patch bzip2 libxml2-dev libtinyxml-dev libjemalloc-dev \
+             libpugixml* libsdl2* libegl-dev libwayland-dev wayland-protocols \
+             libxkbcommon-dev libdbus-1-dev linux-libc-dev"
 
   VORBIS_USE=true
   OGG_USE=true
@@ -3067,9 +3088,10 @@ install_DEB() {
     INFO "Forced OpenSubdiv building, as requested..."
     compile_OSD
   else
-    # No package currently!
+    # No package currently! yes package but no work
     PRINT ""
-    compile_OSD
+    install_packages_DEB libosd* opensubdiv-tools
+    clean_OSD
   fi
 
   PRINT ""
@@ -4424,7 +4446,7 @@ print_info() {
   PRINT ""
   PRINT ""
   PRINT "Ran with:"
-  PRINT "    install_deps.sh $COMMANDLINE"
+  PRINT "    install_deps_rpi.sh $COMMANDLINE"
   PRINT ""
   PRINT ""
   PRINT "If you're using CMake add this to your configuration flags:"
@@ -4595,6 +4617,26 @@ print_info() {
       _buildargs="$_buildargs $_1"
     fi
   fi
+     _1="-D WITH_PLAYER=ON"
+  PRINT "  $_1"
+  _buildargs="$_buildargs $_1"
+  
+     _1="-D WITH_FFTW3=ON"
+  PRINT "  $_1"
+  _buildargs="$_buildargs $_1"
+  
+     _1="-D WITH_MOD_OCEANSIM=ON"
+  PRINT "  $_1"
+  _buildargs="$_buildargs $_1"
+  
+     #_1="-D WITH_SYSTEM_GLEW=ON"
+  #PRINT "  $_1"
+  #_buildargs="$_buildargs $_1"
+
+     _1="-D WITH_SDL=ON"
+  PRINT "  $_1"
+  _buildargs="$_buildargs $_1"
+  
 
   PRINT ""
   PRINT "Or even simpler, just run (in your blender-source dir):"
@@ -4603,6 +4645,35 @@ print_info() {
   PRINT ""
   PRINT "Or in all your build directories:"
   PRINT "  cmake $_buildargs ."
+  
+  
+  PRINT ""  
+  PRINT ""
+  PRINT ""
+  PRINT "  make -j$THREADS BUILD_CMAKE_ARGS=\"$_buildargs\"" > ./blender-rpi-v2.79/make_for_pi.sh
+  cd ./blender-rpi-v2.79
+  sh ./make_for_pi.sh
+  END_TIME=$(date +%s)
+  PRINT ""
+  PRINT ""
+  
+  RUNFILE=$INFO_PATH/build_linux/bin/blender
+       
+  if [ -f "$RUNFILE" ]; then
+    echo ""
+    SUCCESS "Blender-2.79x built in  ${BRIGHT}${YELLOW}$((($END_TIME - $START_TIME) /  60))${NORMAL}${YELLOW} minutes. "
+    PRINT ""
+    PRINT ""
+    RUNFROM " ${NORMAL}$INFO_PATH/${BRIGHT}${YELLOW}hardware_gl_blender27.sh${NORMAL}${YELLOW} (For better performance, recommended.)"
+    PRINT ""  
+    PRINT "or"  
+    PRINT ""  
+    RUNFROM " ${NORMAL}$INFO_PATH/${BRIGHT}${YELLOW}software_gl_blender27.sh${NORMAL}${YELLOW} (For additional display features, slower.)"
+    PRINT ""    
+  else
+    echo ""
+    ERROR "Something went wrong!" 
+  fi
 }
 
 #### "Main" ####
@@ -4623,7 +4694,7 @@ fi
 
 print_info | tee $INFO_PATH/BUILD_NOTES.txt
 PRINT ""
-PRINT "This information has been written to $INFO_PATH/BUILD_NOTES.txt"
+#PRINT "Run Blender from: $INFO_PATH/run_blender_279x.sh"
 PRINT ""
 
 # Switch back to user language.

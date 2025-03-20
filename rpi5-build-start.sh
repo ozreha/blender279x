@@ -23,36 +23,40 @@
 
 ########## start ###########
 
-
 B=$(tput bold)
 R=$(tput setaf 1)
 N=$(tput sgr0)
 Y=$(tput setaf 3)
 
 
-
 clear
-echo "################### start.sh #############################"
+echo "################### rpi5-build-start.sh #######################"
 echo " "
 echo " "
 echo "${B}${Y}Blender${N} is a free and open source software created by ${B}${Y}Ton Roosendaal${N},"
-echo "for 3D animation, modeling, rendering, and more."
-echo "Blender is being developed by the magicians at ${B}${Y}Blender Institute${N},"
-echo "who are passionate about making Blender the best tool for 3D artists"
-echo "They are supported by a large and active ${B}${Y}community${N} of users and developers from all over the world."
+echo "for modeling, 3D animation, rendering, game development and more."
 echo " "
-echo "I want to thank all of them for creating such an amazing software."
+echo "Blender is being made by hundreds of contributors from around the world;"
+echo "by studios and individual artists, professionals and hobbyists, scientists"
+echo "and students, VFX experts and animators, and so on. All of them are united"
+echo "by the desire to have access to a fully free/open source 3D creation pipeline."
+echo " "
+echo "${B}${Y}Blender Foundation${N} supports and facilitates these goals. Thanks to ${B}${Y}donations${N}," 
+echo "the ${B}${Y}Blender Institute${N} and ${B}${Y}Blender Studio${N} projects enable a handful of people"
+echo "to work full-time on Blender. For the rest Blender depend on volunteers from"
+echo "the online community to achieve this goal. More help is always welcome! "
 echo " "
 echo " "
-echo " "
-echo "This shell script will try to build all needed dependencies and,"
-echo "build ${B}${Y}blender2.7 (experimental nightly build from July 2019)${N}"
+
+echo "This shell script will try to build all needed dependencies,"
+echo "and build ${B}${Y}blender2.7 (experimental nightly build from July 2019)${N}"
 echo "which is essentially a modern Blender 2.80 at core, with hardware accelerated render support."
-echo "Blender 2.79x comes with a great 3D game engine called BGE, great for python education as well."
+echo "Blender 2.79 comes with a great 3D game engine called BGE, great tool to teach/learn python as well."
 echo " "
-echo "This script is intended to build Blender 2.79x (blender2.7) for"
-echo "Debian GNU/Linux 12 (bookworm) on ${B}${R}All Raspberry Pi models${N}"
+echo "This script is going to build Blender 2.79 (blender2.7) for"
+echo "Debian GNU/Linux 12 (bookworm) on ${B}${R}Raspberry Pi 5${N}"
 echo " "
+echo "It will took approximately 2 hours. "
 
 while true; do
     echo " "
@@ -66,8 +70,13 @@ done
 
 echo " "
 
+export CFLAGS="-fPIC -O3 -march=armv8.2-a+fp+simd -mtune=cortex-a76"
+export CXXFLAGS="-fPIC -O3 -march=armv8.2-a+fp+simd -mtune=cortex-a76"
+
 chmod +x ./autoconf_pi5.sh
 chmod +x ./build_files/build_environment/install_deps_pi5.sh
+
+cp ./GNUmakefile_pi5 ./GNUmakefile
 
 cd ..
 ./blender-rpi-v2.79/autoconf_pi5.sh
@@ -83,7 +92,5 @@ echo "vblank_mode=0 \\" >> software_gl_blender27.sh
 echo "./build_linux/bin/blender" >> software_gl_blender27.sh
 chmod +x ./software_gl_blender27.sh
 
-
 echo " "
 echo "################### end of start.sh #############################"
-

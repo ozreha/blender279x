@@ -33,7 +33,7 @@
 #include <limits.h>
 
 #ifdef __SSE2__
-#  include <emmintrin.h>
+#  include <sse2neon.h>
 #endif
 
 #include "BLI_math_base.h"

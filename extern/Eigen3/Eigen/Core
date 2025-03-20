@@ -87,30 +87,30 @@
 
     // This extern "C" works around a MINGW-w64 compilation issue
     // https://sourceforge.net/tracker/index.php?func=detail&aid=3018394&group_id=202880&atid=983354
-    // In essence, intrin.h is included by windows.h and also declares intrinsics (just as emmintrin.h etc. below do).
-    // However, intrin.h uses an extern "C" declaration, and g++ thus complains of duplicate declarations
-    // with conflicting linkage.  The linkage for intrinsics doesn't matter, but at that stage the compiler doesn't know;
-    // so, to avoid compile errors when windows.h is included after Eigen/Core, ensure intrinsics are extern "C" here too.
+    // In essence, i n t r i n .h is included by windows.h and also declares i n t r i n s i c s (just as emm i n t r i n.h etc. below do).
+    // However, i n t r i n.h uses an extern "C" declaration, and g++ thus complains of duplicate declarations
+    // with conflicting linkage.  The linkage for i n t r i n s i c s doesn't matter, but at that stage the compiler doesn't know;
+    // so, to avoid compile errors when windows.h is included after Eigen/Core, ensure i n t r i n s i c s are extern "C" here too.
     // notice that since these are C headers, the extern "C" is theoretically needed anyways.
     extern "C" {
-      // In theory we should only include immintrin.h and not the other *mmintrin.h header files directly.
+      // In theory we should only include imm i n t r i n .h and not the other *mm i n t r i n .h header files directly.
       // Doing so triggers some issues with ICC. However old gcc versions seems to not have this file, thus:
       #if defined(__INTEL_COMPILER) && __INTEL_COMPILER >= 1110
-        #include <immintrin.h>
+        #include <sse2neon.h>
       #else
-        #include <emmintrin.h>
-        #include <xmmintrin.h>
+        #include <sse2neon.h>
+        #include <sse2neon.h>
         #ifdef  EIGEN_VECTORIZE_SSE3
-        #include <pmmintrin.h>
+        #include <sse2neon.h>
         #endif
         #ifdef EIGEN_VECTORIZE_SSSE3
-        #include <tmmintrin.h>
+        #include <sse2neon.h>
         #endif
         #ifdef EIGEN_VECTORIZE_SSE4_1
-        #include <smmintrin.h>
+        #include <sse2neon.h>
         #endif
         #ifdef EIGEN_VECTORIZE_SSE4_2
-        #include <nmmintrin.h>
+        #include <sse2neon.h>
         #endif
       #endif
     } // end extern "C"
@@ -166,7 +166,7 @@
 
 // required for __cpuid, needs to be included after cmath
 #if defined(_MSC_VER) && (defined(_M_IX86)||defined(_M_X64)) && (!defined(_WIN32_WCE))
-  #include <intrin.h>
+  #include <sse2neon.h>
 #endif
 
 #if defined(_CPPUNWIND) || defined(__EXCEPTIONS)

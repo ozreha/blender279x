@@ -5,7 +5,7 @@
 #include "SDL_stdinc.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500)
-#include <intrin.h>
+#include <sse2neon.h>
 #ifndef _WIN64
 #define __MMX__
 #define __3dNOW__
@@ -13,25 +13,25 @@
 #define __SSE__
 #define __SSE2__
 #elif defined(__MINGW64_VERSION_MAJOR)
-#include <intrin.h>
+#include <sse2neon.h>
 #else
 #ifdef __ALTIVEC__
 #if HAVE_ALTIVEC_H && !defined(__APPLE_ALTIVEC__)
-#include <altivec.h>
+#include <sse2neon.h>
 #undef pixel
 #endif
 #endif
 #ifdef __MMX__
-#include <mmintrin.h>
+#include <sse2neon.h>
 #endif
 #ifdef __3dNOW__
-#include <mm3dnow.h>
+#include <sse2neon.h>
 #endif
 #ifdef __SSE__
-#include <xmmintrin.h>
+#include <sse2neon.h>
 #endif
 #ifdef __SSE2__
-#include <emmintrin.h>
+#include <sse2neon.h>
 #endif
 #endif
 

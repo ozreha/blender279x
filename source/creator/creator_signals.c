@@ -27,7 +27,7 @@
 
 #if (defined(__APPLE__) && (defined(__i386__) || defined(__x86_64__)))
 #  define OSX_SSE_FPE
-#  include <xmmintrin.h>
+#  include <sse2neon.h>
 #endif
 
 #ifdef WIN32

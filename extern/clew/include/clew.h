@@ -390,9 +390,9 @@ typedef unsigned int cl_GLenum;
 
 #if defined( __SSE__ )
     #if defined( __MINGW64__ )
-        #include <intrin.h>
+        #include <sse2neon.h>
     #else
-        #include <xmmintrin.h>
+        #include <sse2neon.h>
     #endif
     #if defined( __GNUC__ ) && !defined( __ICC )
         typedef float __cl_float4   __attribute__((vector_size(16)));
@@ -404,9 +404,9 @@ typedef unsigned int cl_GLenum;
 
 #if defined( __SSE2__ )
     #if defined( __MINGW64__ )
-        #include <intrin.h>
+        #include <sse2neon.h>
     #else
-        #include <emmintrin.h>
+        #include <sse2neon.h>
     #endif
     #if defined( __GNUC__ ) && !defined( __ICC )
         typedef cl_uchar    __cl_uchar16    __attribute__((vector_size(16)));
@@ -441,7 +441,7 @@ typedef unsigned int cl_GLenum;
 #endif
 
 #if defined( __MMX__ )
-    #include <mmintrin.h>
+    #include <sse2neon.h>
     #if defined( __GNUC__ ) && !defined( __ICC )
         typedef cl_uchar    __cl_uchar8     __attribute__((vector_size(8)));
         typedef cl_char     __cl_char8      __attribute__((vector_size(8)));
@@ -476,9 +476,9 @@ typedef unsigned int cl_GLenum;
 
 #if defined( __AVX__ )
     #if defined( __MINGW64__ )
-        #include <intrin.h>
+        #include <sse2neon.h>
     #else
-        #include <immintrin.h> 
+        #include <sse2neon.h> 
     #endif
     #if defined( __GNUC__ ) && !defined( __ICC )
         typedef cl_float    __cl_float8     __attribute__((vector_size(32)));

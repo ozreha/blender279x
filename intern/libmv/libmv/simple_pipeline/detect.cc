@@ -38,7 +38,7 @@
 #endif
 
 #ifdef __SSE2__
-#  include <emmintrin.h>
+#  include <sse2neon.h>
 #endif
 
 namespace libmv {

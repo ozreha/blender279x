@@ -4743,7 +4743,7 @@ static float ff_quad_form_factor(float *p, float *n, float *q0, float *q1, float
 
 #if 0
 
-#include <xmmintrin.h>
+#include <sse2neon.h>
 
 static __m128 sse_approx_acos(__m128 x)
 {

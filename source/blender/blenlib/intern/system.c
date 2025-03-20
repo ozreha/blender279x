@@ -31,7 +31,7 @@
 #if defined(__linux__) || defined(__APPLE__)
 #  include <execinfo.h>
 #elif defined(WIN32)
-#  include <intrin.h>
+#  include <sse2neon.h>
 #  include <windows.h>
 #  include <dbghelp.h>
 #endif

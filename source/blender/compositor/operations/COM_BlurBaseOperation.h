@@ -24,7 +24,7 @@
 #define MAX_GAUSSTAB_RADIUS 30000
 
 #ifdef __SSE2__
-#  include <emmintrin.h>
+#  include <sse2neon.h>
 #endif
 
 class BlurBaseOperation : public NodeOperation, public QualityStepHelper {

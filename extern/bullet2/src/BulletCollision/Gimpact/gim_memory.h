@@ -37,7 +37,7 @@ email: projectileman@yahoo.com
 #include <string.h>
 
 #ifdef PREFETCH
-#include <xmmintrin.h>	// for prefetch
+#include <sse2neon.h>	// for prefetch
 #define pfval	64
 #define pfval2	128
 //! Prefetch 64

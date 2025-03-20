@@ -27,7 +27,7 @@ OIIO_NAMESPACE_USING
 
 #ifdef _WIN32
 #  if(!defined(FREE_WINDOWS))
-#    include <intrin.h>
+#    include <sse2neon.h>
 #  endif
 #  include "util_windows.h"
 #elif defined(__APPLE__)

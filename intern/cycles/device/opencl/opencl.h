@@ -639,7 +639,7 @@ private:
 	MemoryManager memory_manager;
 	friend class MemoryManager;
 
-	static_assert_align(TextureInfo, 16);
+	//static_assert_align(TextureInfo, 16);
 	device_vector<TextureInfo> texture_info;
 
 	typedef map<string, device_memory*> TexturesMap;

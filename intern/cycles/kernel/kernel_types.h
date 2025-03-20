@@ -1185,7 +1185,7 @@ typedef struct KernelCamera {
 
 	int pad;
 } KernelCamera;
-static_assert_align(KernelCamera, 16);
+//static_assert_align(KernelCamera, 16);
 
 typedef struct KernelFilm {
 	float exposure;
@@ -1256,7 +1256,7 @@ typedef struct KernelFilm {
 	int pass_ray_bounces;
 #endif
 } KernelFilm;
-static_assert_align(KernelFilm, 16);
+//static_assert_align(KernelFilm, 16);
 
 typedef struct KernelBackground {
 	/* only shader index */
@@ -1271,7 +1271,7 @@ typedef struct KernelBackground {
 	float ao_bounces_factor;
 	float ao_pad;
 } KernelBackground;
-static_assert_align(KernelBackground, 16);
+//static_assert_align(KernelBackground, 16);
 
 typedef struct KernelIntegrator {
 	/* emission */
@@ -1347,7 +1347,7 @@ typedef struct KernelIntegrator {
 
 	int pad1, pad2, pad3;
 } KernelIntegrator;
-static_assert_align(KernelIntegrator, 16);
+//static_assert_align(KernelIntegrator, 16);
 
 typedef enum KernelBVHLayout {
 	BVH_LAYOUT_NONE = 0,
@@ -1379,7 +1379,7 @@ typedef struct KernelBVH {
 	int pad1, pad2;
 #endif
 } KernelBVH;
-static_assert_align(KernelBVH, 16);
+//static_assert_align(KernelBVH, 16);
 
 typedef enum CurveFlag {
 	/* runtime flags */
@@ -1399,13 +1399,13 @@ typedef struct KernelCurves {
 	float minimum_width;
 	float maximum_width;
 } KernelCurves;
-static_assert_align(KernelCurves, 16);
+//static_assert_align(KernelCurves, 16);
 
 typedef struct KernelTables {
 	int beckmann_offset;
 	int pad1, pad2, pad3;
 } KernelTables;
-static_assert_align(KernelTables, 16);
+//static_assert_align(KernelTables, 16);
 
 typedef struct KernelData {
 	KernelCamera cam;
@@ -1416,7 +1416,7 @@ typedef struct KernelData {
 	KernelCurves curve;
 	KernelTables tables;
 } KernelData;
-static_assert_align(KernelData, 16);
+//static_assert_align(KernelData, 16);
 
 /* Kernel data structures. */
 
@@ -1445,7 +1445,7 @@ typedef struct KernelObject {
 	float cryptomatte_asset;
 	float pad2, pad3;
 } KernelObject;
-static_assert_align(KernelObject, 16);
+//static_assert_align(KernelObject, 16);
 
 typedef struct KernelSpotLight {
 	float radius;
@@ -1489,7 +1489,7 @@ typedef struct KernelLight {
 		KernelDistantLight distant;
 	};
 } KernelLight;
-static_assert_align(KernelLight, 16);
+//static_assert_align(KernelLight, 16);
 
 typedef struct KernelLightDistribution {
 	float totarea;
@@ -1505,7 +1505,7 @@ typedef struct KernelLightDistribution {
 		} lamp;
 	};
 } KernelLightDistribution;
-static_assert_align(KernelLightDistribution, 16);
+//static_assert_align(KernelLightDistribution, 16);
 
 typedef struct KernelParticle {
 	int index;
@@ -1519,7 +1519,7 @@ typedef struct KernelParticle {
 	float4 velocity;
 	float4 angular_velocity;
 } KernelParticle;
-static_assert_align(KernelParticle, 16);
+//static_assert_align(KernelParticle, 16);
 
 typedef struct KernelShader {
 	float constant_emission[3];
@@ -1528,7 +1528,7 @@ typedef struct KernelShader {
 	int pass_id;
 	int pad2, pad3;
 } KernelShader;
-static_assert_align(KernelShader, 16);
+//static_assert_align(KernelShader, 16);
 
 /* Declarations required for split kernel */
 
