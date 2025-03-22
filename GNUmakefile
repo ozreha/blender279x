@@ -111,7 +111,7 @@ ifndef NPROCS
 	endif
 endif
 
-NPROCS:=2
+NPROCS:=3
 
 # -----------------------------------------------------------------------------
 # Macro for configuring cmake

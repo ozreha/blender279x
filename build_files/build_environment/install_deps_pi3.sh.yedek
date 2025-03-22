@@ -4468,24 +4468,24 @@ print_info() {
     _buildargs="$_buildargs $_1"
   fi
 
-  #if [ -d $INST/boost ]; then
-    #_1="-D BOOST_ROOT=$INST/boost"
-    #_2="-D Boost_NO_SYSTEM_PATHS=ON"
-    #PRINT "  $_1"
-    #PRINT "  $_2"
-    #_buildargs="$_buildargs $_1 $_2"
-  #fi
+  if [ -d $INST/boost ]; then
+    _1="-D BOOST_ROOT=$INST/boost"
+    _2="-D Boost_NO_SYSTEM_PATHS=ON"
+    PRINT "  $_1"
+    PRINT "  $_2"
+    _buildargs="$_buildargs $_1 $_2"
+  fi
 
-  #if [ "$OCIO_SKIP" = false ]; then
-    #_1="-D WITH_OPENCOLORIO=ON"
-    #PRINT "  $_1"
-    #_buildargs="$_buildargs $_1"
-    #if [ -d $INST/ocio ]; then
-      #_1="-D OPENCOLORIO_ROOT_DIR=$INST/ocio"
-      #PRINT "  $_1"
-      #_buildargs="$_buildargs $_1"
-    #fi
-  #fi
+  if [ "$OCIO_SKIP" = false ]; then
+    _1="-D WITH_OPENCOLORIO=ON"
+    PRINT "  $_1"
+    _buildargs="$_buildargs $_1"
+    if [ -d $INST/ocio ]; then
+      _1="-D OPENCOLORIO_ROOT_DIR=$INST/ocio"
+      PRINT "  $_1"
+      _buildargs="$_buildargs $_1"
+    fi
+  fi
 
   if [ -d $INST/openexr ]; then
     _1="-D OPENEXR_ROOT_DIR=$INST/openexr"
@@ -4501,84 +4501,84 @@ print_info() {
     _buildargs="$_buildargs $_1 $_2"
   fi
 
-  #if [ "$OSL_SKIP" = false ]; then
-    #_1="-D WITH_CYCLES_OSL=ON"
-    #_2="-D WITH_LLVM=ON"
-    #_3="-D LLVM_VERSION=$LLVM_VERSION_FOUND"
-    #PRINT "  $_1"
-    #PRINT "  $_2"
-    #PRINT "  $_3"
-    #_buildargs="$_buildargs $_1 $_2 $_3"
-    #if [ -d $INST/osl ]; then
-      #_1="-D OSL_ROOT_DIR=$INST/osl"
-      #PRINT "  $_1"
-      #_buildargs="$_buildargs $_1"
-    #fi
-    #if [ -d $INST/llvm ]; then
-      #_1="-D LLVM_ROOT_DIR=$INST/llvm"
-      #_2="-D LLVM_STATIC=ON"
-      #PRINT "  $_1"
-      #PRINT "  $_2"
-      #_buildargs="$_buildargs $_1 $_2"
-    #fi
-  #else
-    #_1="-D WITH_CYCLES_OSL=OFF"
-    #_2="-D WITH_LLVM=OFF"
-    #PRINT "  $_1"
-    #PRINT "  $_2"
-    #_buildargs="$_buildargs $_1 $_2"
-  #fi
+  if [ "$OSL_SKIP" = false ]; then
+    _1="-D WITH_CYCLES_OSL=ON"
+    _2="-D WITH_LLVM=ON"
+    _3="-D LLVM_VERSION=$LLVM_VERSION_FOUND"
+    PRINT "  $_1"
+    PRINT "  $_2"
+    PRINT "  $_3"
+    _buildargs="$_buildargs $_1 $_2 $_3"
+    if [ -d $INST/osl ]; then
+      _1="-D OSL_ROOT_DIR=$INST/osl"
+      PRINT "  $_1"
+      _buildargs="$_buildargs $_1"
+    fi
+    if [ -d $INST/llvm ]; then
+      _1="-D LLVM_ROOT_DIR=$INST/llvm"
+      _2="-D LLVM_STATIC=ON"
+      PRINT "  $_1"
+      PRINT "  $_2"
+      _buildargs="$_buildargs $_1 $_2"
+    fi
+  else
+    _1="-D WITH_CYCLES_OSL=OFF"
+    _2="-D WITH_LLVM=OFF"
+    PRINT "  $_1"
+    PRINT "  $_2"
+    _buildargs="$_buildargs $_1 $_2"
+  fi
 
-  #if [ "$OSD_SKIP" = false ]; then
-    #_1="-D WITH_OPENSUBDIV=ON"
-    #PRINT "  $_1"
-    #_buildargs="$_buildargs $_1"
-    #if [ -d $INST/osd ]; then
-      #_1="-D OPENSUBDIV_ROOT_DIR=$INST/osd"
-      #PRINT "  $_1"
-      #_buildargs="$_buildargs $_1"
-    #fi
-  #fi
+  if [ "$OSD_SKIP" = false ]; then
+    _1="-D WITH_OPENSUBDIV=ON"
+    PRINT "  $_1"
+    _buildargs="$_buildargs $_1"
+    if [ -d $INST/osd ]; then
+      _1="-D OPENSUBDIV_ROOT_DIR=$INST/osd"
+      PRINT "  $_1"
+      _buildargs="$_buildargs $_1"
+    fi
+  fi
 
-  #if [ "$OPENVDB_SKIP" = false ]; then
-    #_1="-D WITH_OPENVDB=ON"
-    #_2="-D WITH_OPENVDB_BLOSC=ON"
-    #PRINT "  $_1"
-    #PRINT "  $_2"
-    #_buildargs="$_buildargs $_1 $_2"
-    #if [ -d $INST/openvdb ]; then
-      #_1="-D OPENVDB_ROOT_DIR=$INST/openvdb"
-      #PRINT "  $_1"
-      #_buildargs="$_buildargs $_1"
-    #fi
-    #if [ -d $INST/blosc ]; then
-      #_1="-D BLOSC_ROOT_DIR=$INST/blosc"
-      #PRINT "  $_1"
-      #_buildargs="$_buildargs $_1"
-    #fi
-  #fi
+  if [ "$OPENVDB_SKIP" = false ]; then
+    _1="-D WITH_OPENVDB=ON"
+    _2="-D WITH_OPENVDB_BLOSC=ON"
+    PRINT "  $_1"
+    PRINT "  $_2"
+    _buildargs="$_buildargs $_1 $_2"
+    if [ -d $INST/openvdb ]; then
+      _1="-D OPENVDB_ROOT_DIR=$INST/openvdb"
+      PRINT "  $_1"
+      _buildargs="$_buildargs $_1"
+    fi
+    if [ -d $INST/blosc ]; then
+      _1="-D BLOSC_ROOT_DIR=$INST/blosc"
+      PRINT "  $_1"
+      _buildargs="$_buildargs $_1"
+    fi
+  fi
 
-  #if [ "$WITH_OPENCOLLADA" = true ]; then
-    #_1="-D WITH_OPENCOLLADA=ON"
-    #PRINT "  $_1"
-    #_buildargs="$_buildargs $_1"
-    #if [ -d $INST/opencollada ]; then
-      #_1="-D OPENCOLLADA_ROOT_DIR=$INST/opencollada"
-      #PRINT "  $_1"
-      #_buildargs="$_buildargs $_1"
-    #fi
-  #fi
+  if [ "$WITH_OPENCOLLADA" = true ]; then
+    _1="-D WITH_OPENCOLLADA=ON"
+    PRINT "  $_1"
+    _buildargs="$_buildargs $_1"
+    if [ -d $INST/opencollada ]; then
+      _1="-D OPENCOLLADA_ROOT_DIR=$INST/opencollada"
+      PRINT "  $_1"
+      _buildargs="$_buildargs $_1"
+    fi
+  fi
 
-  #if [ "$WITH_EMBREE" = true ]; then
-    #_1="-D WITH_CYCLES_EMBREE=ON"
-    #PRINT "  $_1"
-    #_buildargs="$_buildargs $_1"
-    #if [ -d $INST/embree ]; then
-      #_1="-D EMBREE_ROOT_DIR=$INST/embree"
-      #PRINT "  $_1"
-      #_buildargs="$_buildargs $_1"
-    #fi
-  #fi
+  if [ "$WITH_EMBREE" = true ]; then
+    _1="-D WITH_CYCLES_EMBREE=ON"
+    PRINT "  $_1"
+    _buildargs="$_buildargs $_1"
+    if [ -d $INST/embree ]; then
+      _1="-D EMBREE_ROOT_DIR=$INST/embree"
+      PRINT "  $_1"
+      _buildargs="$_buildargs $_1"
+    fi
+  fi
 
   if [ "$WITH_JACK" = true ]; then
     _1="-D WITH_JACK=ON"
@@ -4588,16 +4588,16 @@ print_info() {
     _buildargs="$_buildargs $_1 $_2"
   fi
 
-  #if [ "$ALEMBIC_SKIP" = false ]; then
-    #_1="-D WITH_ALEMBIC=ON"
-    #PRINT "  $_1"
-    #_buildargs="$_buildargs $_1"
-    #if [ -d $INST/alembic ]; then
-      #_1="-D ALEMBIC_ROOT_DIR=$INST/alembic"
-      #PRINT "  $_1"
-      #_buildargs="$_buildargs $_1"
-    #fi
-  #fi
+  if [ "$ALEMBIC_SKIP" = false ]; then
+    _1="-D WITH_ALEMBIC=ON"
+    PRINT "  $_1"
+    _buildargs="$_buildargs $_1"
+    if [ -d $INST/alembic ]; then
+      _1="-D ALEMBIC_ROOT_DIR=$INST/alembic"
+      PRINT "  $_1"
+      _buildargs="$_buildargs $_1"
+    fi
+  fi
 
   if [ "$NO_SYSTEM_GLEW" = true ]; then
     _1="-D WITH_SYSTEM_GLEW=OFF"
@@ -4625,9 +4625,9 @@ print_info() {
   PRINT "  $_1"
   _buildargs="$_buildargs $_1"
   
-     #_1="-D WITH_MOD_OCEANSIM=ON"
-  #PRINT "  $_1"
-  #_buildargs="$_buildargs $_1"
+     _1="-D WITH_MOD_OCEANSIM=ON"
+  PRINT "  $_1"
+  _buildargs="$_buildargs $_1"
   
      #_1="-D WITH_SYSTEM_GLEW=ON"
   #PRINT "  $_1"
@@ -4650,8 +4650,6 @@ print_info() {
   PRINT ""  
   PRINT ""
   PRINT ""
-  
-  #_buildargs="-D WITH_BLENDER=OFF -D WITH_PLAYER=ON"
   PRINT "  make -j$THREADS BUILD_CMAKE_ARGS=\"$_buildargs\"" > ./blender-rpi-v2.79/make_for_pi.sh
   cd ./blender-rpi-v2.79
   sh ./make_for_pi.sh
@@ -4659,7 +4657,7 @@ print_info() {
   PRINT ""
   PRINT ""
   
-  RUNFILE=$INFO_PATH/build_linux/bin/blenderplayer
+  RUNFILE=$INFO_PATH/build_linux/bin/blender
        
   if [ -f "$RUNFILE" ]; then
     echo ""
