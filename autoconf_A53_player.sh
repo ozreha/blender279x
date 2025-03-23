@@ -1,6 +1,6 @@
 ./blender-rpi-v2.79/build_files/build_environment/install_deps_pi3.sh \
 --with-all \
---threads=2 \
+--threads=3 \
  --build-python \
 --skip-numpy \
  --build-boost \
@@ -11,7 +11,7 @@
 --skip-osl \
 --skip-osd \
 --skip-openvdb \
- --build-alembic \
+--skip-alembic \
 --skip-opencollada \
- --build-embree \
+--skip-embree \
  --build-ffmpeg \
