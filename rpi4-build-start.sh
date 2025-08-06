@@ -19,7 +19,7 @@
 
 # A shell script installing/building all needed dependencies and,
 # building Blender 2.7 ("experimental nightly build from July 2019")
-# for Debian GNU/Linux 12 (bookworm) on Raspberry Pi 4
+# for Raspberry Pi OS 12&13 on Raspberry Pi 4
 
 ########## start ###########
 
