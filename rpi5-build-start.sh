@@ -19,7 +19,7 @@
 
 # A shell script installing/building all needed dependencies and,
 # building Blender 2.7 ("experimental nightly build from July 2019")
-# for Debian GNU/Linux 12 (bookworm) on Raspberry Pi 5
+# Raspberry Pi OS 12&13 on Raspberry Pi 4&5"
 
 ########## start ###########
 
@@ -55,9 +55,9 @@ echo "which is essentially a modern Blender 2.80 at core, with hardware accelera
 echo "Blender 2.79 comes with a great 3D game engine called BGE, great tool to teach/learn python as well."
 echo " "
 echo "This script is going to build Blender 2.79 (blender2.7) for"
-echo "Raspberry Pi OS 12&13 on ${B}${R}Raspberry Pi 5${N}"
+echo "Raspberry Pi OS 12&13 on ${B}${R}Raspberry Pi 4&5${N}"
 echo "This software is experimental and not for production use."
-echo "It will took approximately 2 hours. "
+echo "The build will take approximately 2 hours. "
 
 
 
