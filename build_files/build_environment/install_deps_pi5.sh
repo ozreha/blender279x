@@ -399,7 +399,7 @@ EMBREE_FORCE_BUILD=false
 EMBREE_FORCE_REBUILD=false
 EMBREE_SKIP=false
 
-FFMPEG_VERSION="4.0.2"
+FFMPEG_VERSION="4.4.6"
 FFMPEG_VERSION_MIN="2.8.4"
 FFMPEG_FORCE_BUILD=false
 FFMPEG_FORCE_REBUILD=false
@@ -2785,9 +2785,9 @@ install_DEB() {
              libxcursor-dev libxi-dev wget libsqlite3-dev libxrandr-dev libxinerama-dev \
              libbz2-dev libncurses5-dev libssl-dev liblzma-dev libreadline-dev \
              libopenal-dev libglew-dev yasm $THEORA_DEV $VORBIS_DEV $OGG_DEV \
-             libsdl1.2-dev libfftw3* patch bzip2 libxml2-dev libtinyxml-dev libjemalloc-dev \
-             libpugixml* libsdl2* libegl-dev libwayland-dev wayland-protocols \
-             libxkbcommon-dev libdbus-1-dev linux-libc-dev"
+             libsdl1.2-dev libfftw3-dev patch bzip2 libxml2-dev libtinyxml-dev libjemalloc-dev \
+             libpugixml-dev libsdl2-dev libegl-dev libwayland-dev wayland-protocols \
+             libxkbcommon-dev libdbus-1-dev linux-libc-dev libopenjpip*"
 
   VORBIS_USE=true
   OGG_USE=true
