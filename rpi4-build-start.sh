@@ -46,6 +46,7 @@ echo "the ${B}${Y}Blender Institute${N} and ${B}${Y}Blender Studio${N} projects 
 echo "to work full-time on Blender. For the rest Blender depend on volunteers from"
 echo "the online community to achieve this goal. More help is always welcome! "
 echo " "
+echo " Visit ${B}${Y}https://fund.blender.org/${N}"
 echo " "
 
 echo "This shell script will try to build all needed dependencies,"
@@ -54,9 +55,9 @@ echo "which is essentially a modern Blender 2.80 at core, with hardware accelera
 echo "Blender 2.79 comes with a great 3D game engine called BGE, great tool to teach/learn python as well."
 echo " "
 echo "This script is going to build Blender 2.79 (blender2.7) for"
-echo "Debian GNU/Linux 12 (bookworm) on ${B}${R}Raspberry Pi 4${N}"
-echo " "
-echo "It will took approximately 2 hours. "
+echo "Raspberry Pi OS 12&13 on ${B}${R}Raspberry Pi 4${N}"
+echo "This software is experimental and not for production use."
+echo "The build will take approximately 2 hours. "
 
 while true; do
     echo " "
