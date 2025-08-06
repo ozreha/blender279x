@@ -82,7 +82,7 @@ export CXXFLAGS="-fPIC -O3 -march=armv8.2-a+fp+simd -mtune=cortex-a76"
 cp ./GNUmakefile_pi5 ./GNUmakefile
 
 cd ..
-sh ./blender-rpi-v2.79/autoconf_pi5.sh
+sh ./blender279x/autoconf_pi5.sh
 
 #echo "MESA_GL_VERSION_OVERRIDE=3.3 \\" > hardware_gl_blender27.sh
 echo "vblank_mode=0 \\" >> hardware_gl_blender27.sh
