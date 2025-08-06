@@ -1,4 +1,4 @@
-./blender-rpi-v2.79/build_files/build_environment/install_deps_pi5.sh \
+./blender279x/build_files/build_environment/install_deps_pi5.sh \
 --with-all \
 --threads=3 \
  --build-python \
