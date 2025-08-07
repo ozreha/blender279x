@@ -4650,8 +4650,8 @@ print_info() {
   PRINT ""  
   PRINT ""
   PRINT ""
-  PRINT "  make -j$THREADS BUILD_CMAKE_ARGS=\"$_buildargs\"" > ./blender-rpi-v2.79/make_for_pi.sh
-  cd ./blender-rpi-v2.79
+  PRINT "  make -j$THREADS BUILD_CMAKE_ARGS=\"$_buildargs\"" > ./blender279x/make_for_pi.sh
+  cd ./blender279x
   sh ./make_for_pi.sh
   END_TIME=$(date +%s)
   PRINT ""
