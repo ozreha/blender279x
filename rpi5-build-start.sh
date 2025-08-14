@@ -19,7 +19,11 @@
 
 # A shell script installing/building all needed dependencies and,
 # building Blender 2.7 ("experimental nightly build from July 2019")
-# Raspberry Pi OS 12&13 on Raspberry Pi 5
+# for Raspberry Pi OS 12(bookworm) and 13(trixie) on Raspberry Pi 5
+
+# 
+# This forked software has no affiliation with the Official Blender Institute.
+# 
 
 ########## start ###########
 
@@ -32,6 +36,7 @@ Y=$(tput setaf 3)
 clear
 echo "################### rpi5-build-start.sh #######################"
 echo " "
+echo "This forked software has no affiliation with the official Blender Institute."
 echo " "
 echo "${B}${Y}Blender${N} is a free and open source software created by ${B}${Y}Ton Roosendaal${N},"
 echo "for modeling, 3D animation, rendering, game development and more."
@@ -55,10 +60,13 @@ echo "which is essentially a modern Blender 2.80 at core, with hardware accelera
 echo "Blender 2.79 comes with a great 3D game engine called BGE, great tool to teach/learn python as well."
 echo " "
 echo "This script is going to build Blender 2.79 (blender2.7) for"
-echo "Raspberry Pi OS 12&13 on ${B}${R}Raspberry Pi 5${N}"
+echo "Raspberry Pi OS 12(bookworm) and 13(trixie) on ${B}${R}Raspberry Pi 5${N}"
 echo "This software is experimental and not for production use."
 echo "The build will take approximately 2 hours. "
 
+echo " "
+echo "This forked software has no affiliation with the Official Blender Institute."
+echo " "
 
 
 while true; do
