@@ -67,7 +67,7 @@ We have pushed the limits of the ARM architecture to make this run as smoothly a
 We utilized **Automated ARM Porting via Scripted Source Substitution**. By using `sse2neon.h`, we translated Intel intrinsic instructions into ARM NEON instructions, providing a massive boost in calculation speeds.
 
 ### 2. Embree on ARM
-In the original source, Embree (Intel's ray tracing kernels) was disabled for ARM. We successfully enabled it. This results in up to **40% speed increase** in Cycles rendering, especially in complex scenes.
+In the original source, Embree (Intel's ray tracing kernels) was disabled. We successfully enabled it. This results in up to **40% speed increase** in Cycles rendering, especially in complex scenes.
 
 ### 3. Python Optimizations
 Python is compiled with `--enable-optimizations` and `--with-lto`. While this increases the build time, it provides a **8% to 30% performance boost** in Python script execution depending on the task.
