@@ -7,7 +7,7 @@
 ## 🌍 The Mission
 This project is dedicated to compiling a special, highly optimized version of Blender 2.79 on Raspberry Pi 4 and 5 (specifically for Debian Trixie/Bookworm environments).
 
-**Our primary goal is educational:** To contribute to providing a unique, accessible platform for children and young people all over the world. We want to empower them to learn Python coding, 3D design, 2D/3D animation, digital sculpting, and much more—all on a computer the size of a business card.
+**Our primary goal is educational:** To contribute to providing a unique, accessible platform for children and young people all over the world. We want to empower them to learn Python coding, 3D design, 2D/3D animation, digital sculpting, and much more—all on a computer the size of a credit card.
 
 ---
 
@@ -26,7 +26,7 @@ The build process is fully automated. The script detects your hardware (Pi 4 vs 
     ```bash
     mkdir ~/blender-git
     cd ~/blender-git
-    git clone [https://github.com/ozreha/blender279x.git](https://github.com/ozreha/blender279x.git)
+    git clone https://github.com/ozreha/blender279x.git
     ```
 
 2.  **Run the Build Script:**

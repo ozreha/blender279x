@@ -19,7 +19,7 @@
 
 # A shell script installing/building all needed dependencies and,
 # building Blender 2.7 ("experimental nightly build from July 2019")
-# for Raspberry Pi OS 12(bookworm) on Raspberry Pi 4
+# for Raspberry Pi OS (bookworm & trixie) on Raspberry Pi 4 & 5
 
 # 
 # This forked software has no affiliation with the Official Blender Institute.
@@ -27,49 +27,47 @@
 
 ########## start ###########
 
+# Renk tanımları (Eğer scriptin başında tanımlı değilse bu bloğu açmalısın)
 B=$(tput bold)
+Y=$(tput setaf 3)
 R=$(tput setaf 1)
 N=$(tput sgr0)
-Y=$(tput setaf 3)
 
-
-clear
-echo "################### rpi4-build-start.sh #######################"
+echo "#######################################################################"
+echo "###            ${B}${Y}Blender 2.79x (Extended) Build Script${N}              ###"
+echo "#######################################################################"
 echo " "
-echo "This forked software has no affiliation with the official Blender Institute."
+echo "DISCLAIMER: This forked software has no affiliation with the official Blender Institute."
 echo " "
-echo "${B}${Y}Blender${N} is a free and open source software created by ${B}${Y}Ton Roosendaal${N},"
-echo "for modeling, 3D animation, rendering, game development and more."
+echo "${B}${Y}Blender${N} is free and open source software, originally created by ${B}${Y}Ton Roosendaal${N},"
+echo "for modeling, 3D animation, rendering, game development, and more."
 echo " "
-echo "Blender is being made by hundreds of contributors from around the world;"
-echo "by studios and individual artists, professionals and hobbyists, scientists"
-echo "and students, VFX experts and animators, and so on. All of them are united"
-echo "by the desire to have access to a fully free/open source 3D creation pipeline."
+echo "Blender is made by hundreds of contributors from around the world;"
+echo "united by the desire to have access to a fully free 3D creation pipeline."
 echo " "
-echo "${B}${Y}Blender Foundation${N} supports and facilitates these goals. Thanks to ${B}${Y}donations${N}," 
-echo "the ${B}${Y}Blender Institute${N} and ${B}${Y}Blender Studio${N} projects enable a handful of people"
-echo "to work full-time on Blender. For the rest Blender depend on volunteers from"
-echo "the online community to achieve this goal. More help is always welcome! "
+echo "The ${B}${Y}Blender Foundation${N} supports these goals. Thanks to donations,"
+echo "a core team works full-time, but for the rest, Blender depends on"
+echo "volunteers like you. More help is always welcome!"
 echo " "
-echo " Visit ${B}${Y}https://fund.blender.org/${N} for donation."
+echo " -> Visit ${B}${Y}https://fund.blender.org/${N} to support/donate."
+echo " -> Visit ${B}${Y}https://www.blender.org/${N} for everything else."
 echo " "
-echo " Visit ${B}${Y}https://www.blender.org/${N} for everyting."
+echo "-----------------------------------------------------------------------"
 echo " "
-
-echo "This shell script will try to build all needed dependencies,"
-echo "and build ${B}${Y}blender2.7 (experimental nightly build from July 2019)${N}"
-echo "which is essentially a modern Blender 2.80 at core, with hardware accelerated render support."
-echo "Blender 2.79 comes with a great 3D game engine called BGE, great tool to teach/learn python as well."
+echo "This script will compile ${B}${Y}blender2.7 (Experimental July 2019 Branch)${N}."
+echo "Essentially a modern Blender 2.80 Core with the classic 2.79 interface,"
+echo "featuring the ${B}${Y}Blender Game Engine (BGE)${N} and Hardware Acceleration."
 echo " "
-echo "This script is going to build Blender 2.79 (blender2.7) for"
-echo "Raspberry Pi OS trixie on ${B}${R}Raspberry Pi 4 or Raspberry Pi 5${N}"
-echo "This software is experimental and not for production use."
-echo "The build might take a couple of hours. "
-
+echo "TARGET SYSTEM:"
+echo "  Hardware: ${B}${R}Raspberry Pi 4 / Raspberry Pi 5${N}"
+echo "  OS      : Raspberry Pi OS (Bookworm / Trixie)"
 echo " "
-echo "This forked software has no affiliation with the Official Blender Institute."
+echo "WARNING:"
+echo "  This software is experimental and not for production use."
+echo "  The build process is CPU intensive and will take approx. ${B}${R}1 - 2.5 HOURS.${N}"
 echo " "
-
+echo "#######################################################################"
+echo " "
 while true; do
     echo " "
     read -p "Do you wish to continue? (y/n): " yn
@@ -101,16 +99,7 @@ fi
 
 echo " "
 
-#export CFLAGS="-fPIC -O3 -march=armv8-a+fp+simd -mtune=cortex-a72"
-#export CXXFLAGS="-fPIC -O3 -march=armv8-a+fp+simd -mtune=cortex-a72"
-
-#chmod +x ./autoconf.sh
-#chmod +x ./build_files/build_environment/install_deps_pi${MODEL_VER}.sh
-
-#cp ./GNUmakefile_pi${MODEL_VER} ./GNUmakefile
-
 cd ..
-#./blender279x/autoconf.sh
 
 RPI_MODEL_NAME=$(cat /sys/firmware/devicetree/base/model | tr -d '\0')
 
@@ -146,7 +135,6 @@ echo "Selected Build Thread Count: $THREAD_COUNT"
 echo "Script To Run: install_deps_pi${MODEL_VER}.sh"
 echo "-----------------------------------------"
 
-#./blender279x/build_files/build_environment/install_deps_pi${MODEL_VER}.sh \
 ./blender279x/build_files/build_environment/install_deps.sh \
 --with-all \
 --threads=$THREAD_COUNT \
@@ -164,7 +152,6 @@ echo "-----------------------------------------"
 --skip-opencollada \
  --build-embree \
  --build-ffmpeg
-
 
 
 echo "vblank_mode=0 \\" > hardware_gl_blender27.sh
