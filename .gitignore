@@ -1,0 +1,20 @@
+# --- Kullanıcıya Özel Dosyalar ---
+# Bu dosya repo içindeymiş, github'a gitmesini engelliyoruz:
+make_for_pi.sh
+
+# --- Derleme Klasörleri ---
+# Eğer yanlışlıkla repo içine build klasörü açılırsa bunları görmezden gel:
+build_linux/
+build/
+bin/
+
+# --- Standart Gereksiz Dosyalar ---
+# Python derleme artıkları
+__pycache__/
+*.pyc
+
+# İşletim sistemi dosyaları (Mac/Linux)
+.DS_Store
+.swp
+*~
+
