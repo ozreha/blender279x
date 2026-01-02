@@ -105,7 +105,7 @@ echo " "
 #export CXXFLAGS="-fPIC -O3 -march=armv8-a+fp+simd -mtune=cortex-a72"
 
 #chmod +x ./autoconf.sh
-chmod +x ./build_files/build_environment/install_deps_pi${MODEL_VER}.sh
+#chmod +x ./build_files/build_environment/install_deps_pi${MODEL_VER}.sh
 
 #cp ./GNUmakefile_pi${MODEL_VER} ./GNUmakefile
 
