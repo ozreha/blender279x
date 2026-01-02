@@ -62,9 +62,9 @@ echo "which is essentially a modern Blender 2.80 at core, with hardware accelera
 echo "Blender 2.79 comes with a great 3D game engine called BGE, great tool to teach/learn python as well."
 echo " "
 echo "This script is going to build Blender 2.79 (blender2.7) for"
-echo "Raspberry Pi OS 12(bookworm) on ${B}${R}Raspberry Pi 4${N}"
+echo "Raspberry Pi OS trixie on ${B}${R}Raspberry Pi 4 or Raspberry Pi 5${N}"
 echo "This software is experimental and not for production use."
-echo "The build will take approximately 2 hours. "
+echo "The build might take a couple of hours. "
 
 echo " "
 echo "This forked software has no affiliation with the Official Blender Institute."
