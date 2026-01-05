@@ -5,18 +5,19 @@
 ---
 
 ## 🌍 The Mission
-This project is dedicated to compiling a special, highly optimized version of Blender 2.79 on Raspberry Pi 4 and 5 (specifically for Debian Trixie/Bookworm environments).
+This project is dedicated to compiling a special, highly optimized version of Blender 2.79 on Raspberry Pi 4 and 5.
 
-**Our primary goal is educational:** To contribute to providing a unique, accessible platform for children and young people all over the world. We want to empower them to learn Python coding, 3D design, 2D/3D animation, digital sculpting, and much more—all on a computer the size of a credit card.
+**Our primary goal is educational:** To contribute to providing a unique, accessible platform for children and young people all over the world. We want to empower them to learn Python coding, 3D design, 2D/3D animation, digital sculpting, and much more—all on a computer the size of a **credit card**.
 
 ---
 
 ## 🚀 Quick Start (Installation & Build)
 
 ### Prerequisites
-* Raspberry Pi 4 or Raspberry Pi 5
-* Recommended OS: Raspberry Pi OS (Debian Trixie/Bookworm based)
-* Internet connection (for cloning and downloading dependencies)
+* **Hardware:** Raspberry Pi 4 or Raspberry Pi 5.
+* **OS (Highly Recommended): Raspberry Pi OS (Bookworm).**
+    * *Why Bookworm?* Since this Blender version is based on a 2019 codebase, it aligns perfectly with the library versions found in Bookworm. This results in fewer compilation warnings, fewer skipped tests during Python optimization, and generally smoother performance compared to newer distributions like Trixie.
+* Internet connection (for cloning and downloading dependencies).
 
 ### Build Instructions
 The build process is fully automated. The script detects your hardware (Pi 4 vs Pi 5) and RAM size to adjust compilation flags and core usage to prevent overheating.
@@ -26,7 +27,7 @@ The build process is fully automated. The script detects your hardware (Pi 4 vs 
     ```bash
     mkdir ~/blender-git
     cd ~/blender-git
-    git clone https://github.com/ozreha/blender279x.git
+    git clone https://github.com/ozreha/blender279x
     ```
 
 2.  **Run the Build Script:**
@@ -66,11 +67,11 @@ We have pushed the limits of the ARM architecture to make this run as smoothly a
 ### 1. Intel to ARM Porting (SSE2NEON)
 We utilized **Automated ARM Porting via Scripted Source Substitution**. By using `sse2neon.h`, we translated Intel intrinsic instructions into ARM NEON instructions, providing a massive boost in calculation speeds.
 
-### 2. Embree on ARM
-In the original source, Embree (Intel's ray tracing kernels) was disabled. We successfully enabled it. This results in up to **40% speed increase** in Cycles rendering, especially in complex scenes.
+### 2. Embree (Enabled)
+In the original source, Embree (Intel's ray tracing kernels) was completely disabled. We successfully **enabled** it and optimized it for ARM. This results in up to **40% speed increase** in Cycles rendering, especially in complex scenes.
 
 ### 3. Python Optimizations
-Python is compiled with `--enable-optimizations` and `--with-lto`. While this increases the build time, it provides a **8% to 30% performance boost** in Python script execution depending on the task.
+Python is compiled with `--enable-optimizations` and `--with-lto`. While this increases the build time, it provides a **8% to 30% performance boost** in Python script execution depending on the task. (These optimizations pass more successfully on Bookworm due to compatible toolchains).
 
 ### 4. Hardware Specific Flags
 We apply specific compiler flags based on your CPU:
@@ -98,9 +99,9 @@ I am a retired Civil Engineer, approaching my 60s. I am not a professional devel
 I realized no one else was maintaining this specific bridge between the classic Blender workflow and modern ARM hardware, so I decided to do it myself. Working on this project made me feel the true power of Open Source software to my core.
 
 **Special Thanks:**
-* **Gemini 3 Pro:** For the immense help in merging automation scripts for RPi4 and RPi5.
 * **Ton Roosendaal & The Blender Institute:** For giving the world this amazing software.
 * **Global Contributors:** To every developer who has ever committed a line of code to Blender.
+* **Gemini 3 Pro:** For the immense help in merging automation scripts for RPi4 and RPi5.
 
 ### ❤️ Support Blender
 Blender is free and open-source thanks to the community.
