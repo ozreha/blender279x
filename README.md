@@ -39,7 +39,7 @@ The build process is fully automated. The script detects your hardware (Pi 4 vs 
     *Note: If you encounter network interruptions, simply run `./start.sh` again.*
 
 3.  **Wait:**
-    Depending on your Raspberry Pi model and RAM, the compilation will take between **1 to 2.5 hours**.
+    Depending on your Raspberry Pi model and RAM, the compilation will take between **1 to 3 hours**.
 
 4.  **Launch Blender:**
     Once finished, go up one level to the main directory (`~/blender-git`). You will find two launcher scripts:
