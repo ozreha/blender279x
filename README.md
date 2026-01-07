@@ -11,23 +11,57 @@ This project is dedicated to compiling a special, highly optimized version of Bl
 
 ---
 
+## ⚙️ System Configuration & Build Times (Read Before Building)
+
+Building a complex software suite like Blender is a heavy task. Your build time will vary significantly based on your model, RAM, OS version, and overclocking status.
+
+### 1. Crucial Note on Swap Memory
+**Do not use the default SD-Card Swap (`dphys-swapfile`).**
+During such a massive compilation, using file-based swap on an SD card will not only slow down the process drastically but may also damage your SD card.
+* **Raspberry Pi OS (Trixie):** Uses ZRAM by default, which is good.
+* **Raspberry Pi OS (Bookworm):** Comes with `dphys-swapfile` enabled by default. We strongly recommend disabling it and switching to **ZRAM** (compressed RAM swap).
+
+**Recommended Setup for Bookworm:**
+1.  Disable the file swap:
+    ```bash
+    sudo systemctl stop dphys-swapfile
+    sudo systemctl disable dphys-swapfile
+    ```
+2.  Install ZRAM tools (2GB is usually sufficient):
+    ```bash
+    sudo apt install zram-tools
+    # Edit /etc/default/zramswap if needed to set size, but defaults often work well.
+    ```
+
+### 2. Real-World Build Times (Benchmarks)
+The following tests were conducted on **Raspberry Pi OS (Bookworm)** with **2GB ZRAM**, **No Swap File**, and **No Overclocking**.
+
+| Device | RAM | Time (Approx.) | Speed Factor |
+| :--- | :--- | :--- | :--- |
+| **Raspberry Pi 5** | 4GB | **129 Minutes** (~2 hrs) | 2.5x Faster |
+| **Raspberry Pi 4** | 4GB | **310 Minutes** (~5 hrs) | 1.0x Baseline |
+
+> **Note for Raspberry Pi 4 Users:** Do not let the compilation time scare you! While the Raspberry Pi 5 shows its raw power during compilation (2.5x faster), **Blender 2.79x runs perfectly smooth and usable on the Raspberry Pi 4.** The wait is worth it.
+
+---
+
 ## 🚀 Quick Start (Installation & Build)
 
 ### Prerequisites
 * **Hardware:** Raspberry Pi 4 or Raspberry Pi 5.
 * **OS (Highly Recommended): Raspberry Pi OS (Bookworm).**
     * *Why Bookworm?* Since this Blender version is based on a 2019 codebase, it aligns perfectly with the library versions found in Bookworm. This results in fewer compilation warnings, fewer skipped tests during Python optimization, and generally smoother performance compared to newer distributions like Trixie.
-* Internet connection (for cloning and downloading dependencies).
+* Internet connection.
 
 ### Build Instructions
-The build process is fully automated. The script detects your hardware (Pi 4 vs Pi 5) and RAM size to adjust compilation flags and core usage to prevent overheating.
+The build process is fully automated. The script detects your hardware (Pi 4 vs Pi 5) and RAM size to adjust compilation flags and core usage.
 
 1.  **Clone the repository:**
-    Create a directory named `blender-git` in your home folder and clone the project there.
+    Create a directory named `blender-git` in your home folder.
     ```bash
     mkdir ~/blender-git
     cd ~/blender-git
-    git clone https://github.com/ozreha/blender279x
+    git clone https://github.com/ozreha/blender279x.git
     ```
 
 2.  **Run the Build Script:**
@@ -39,13 +73,19 @@ The build process is fully automated. The script detects your hardware (Pi 4 vs 
     *Note: If you encounter network interruptions, simply run `./start.sh` again.*
 
 3.  **Wait:**
-    Depending on your Raspberry Pi model and RAM, the compilation will take between **1 to 3 hours**.
+    See the "Build Times" section above. It’s a good time to watch a movie or take a long walk.
 
 4.  **Launch Blender:**
     Once finished, go up one level to the main directory (`~/blender-git`). You will find two launcher scripts:
 
     * `./hardware_gl_blender27.sh` (Recommended): Uses hardware acceleration.
-    * `./software_gl_blender27.sh`: Uses software rendering. Useful if you encounter display artifacts in Grease Pencil perspective mode (slower, but surprisingly decent on Pi 5).
+    * `./software_gl_blender27.sh`: Uses software rendering. Useful if you encounter display artifacts in Grease Pencil perspective mode.
+
+### 🛡️ Pro Tip: Protect Your Hard Work (Backup)
+Considering the compilation can take up to **5 hours**, we strongly recommend creating a full backup image of your SD card once the build is successful and everything is working.
+* **Windows:** Use tools like *Win32 Disk Imager*.
+* **Linux/RPi:** Use `dd` or the excellent `rpi-clone` tool for hot backups.
+This "Save Point" will save you hours of rebuilding if your SD card ever gets corrupted.
 
 ---
 
@@ -71,7 +111,7 @@ We utilized **Automated ARM Porting via Scripted Source Substitution**. By using
 In the original source, Embree (Intel's ray tracing kernels) was completely disabled. We successfully **enabled** it and optimized it for ARM. This results in up to **40% speed increase** in Cycles rendering, especially in complex scenes.
 
 ### 3. Python Optimizations
-Python is compiled with `--enable-optimizations` and `--with-lto`. While this increases the build time, it provides a **8% to 30% performance boost** in Python script execution depending on the task. (These optimizations pass more successfully on Bookworm due to compatible toolchains).
+Python is compiled with `--enable-optimizations` and `--with-lto`. While this increases the build time, it provides a **8% to 30% performance boost** in Python script execution. (These optimizations pass more successfully on Bookworm due to compatible toolchains).
 
 ### 4. Hardware Specific Flags
 We apply specific compiler flags based on your CPU:
