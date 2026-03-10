@@ -49,8 +49,8 @@ The following tests were conducted on **Raspberry Pi OS (Bookworm)** with **2GB 
 
 ### Prerequisites
 * **Hardware:** Raspberry Pi 4 or Raspberry Pi 5.
-* **OS (Highly Recommended): Raspberry Pi OS (Bookworm).**
-    * *Why Bookworm?* Since this Blender version is based on a 2019 codebase, it aligns perfectly with the library versions found in Bookworm. This results in fewer compilation warnings, fewer skipped tests during Python optimization, and generally smoother performance compared to newer distributions like Trixie.
+* **OS: Raspberry Pi OS (Bookworm or Trixie).**
+    * Since this Blender version is based on a 2019 codebase, it aligns better with the library versions found in Bookworm. This results in fewer compilation warnings, fewer skipped tests during Python optimization.
 * Internet connection.
 
 ### Build Instructions
