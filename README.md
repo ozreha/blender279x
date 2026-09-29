@@ -141,7 +141,6 @@ I realized no one else was maintaining this specific bridge between the classic 
 **Special Thanks:**
 * **Ton Roosendaal & The Blender Institute:** For giving the world this amazing software.
 * **Global Contributors:** To every developer who has ever committed a line of code to Blender.
-* **Gemini 3 Pro:** For the immense help in merging automation scripts for RPi4 and RPi5.
 
 ### ❤️ Support Blender
 Blender is free and open-source thanks to the community.
